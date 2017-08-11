@@ -10,10 +10,5 @@
  */
 
 module.exports.bootstrap = function(cb) {
-  var schedule = require('node-schedule');
-  sails.config.crons.cron().forEach(function (task) {
-    schedule.scheduleJob(task.interval, sails.config.crons[task.method]);
-  });
-
   cb();
 };
