@@ -82,7 +82,13 @@ module.exports = {
   signIn: asyncHandler(function(req, res) {
     if(!req.param('name')) return RespService.e(res, 'Missing name');
     if(!req.param('email')) return RespService.e(res, 'Missing email');
-    //if(!req.param('code')) return RespService.e(res, 'Missing team code');
+    if(!req.param('code')) return RespService.e(res, 'Missing team code');
+
+    // check if the team exists
+    var tempq = {code: req.param('code')};
+    try { var temp = await(Teams.findOne(tempq));
+    if(temp == null) return RespService.e(res, 'team does not exist'); }
+    catch(err) { return RespService.e(res, 'team does not exist');
 
     // See if the user already exists
     try { 
