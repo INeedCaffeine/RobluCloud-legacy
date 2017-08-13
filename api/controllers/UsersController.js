@@ -14,7 +14,7 @@ var bcrypt = require('bcrypt-nodejs');  // module used to hash passwords
 module.exports = {
   
   // TEMPORARY METHOD - DO NOT LEAVE IN PRODUCTIoN
- create_admin_user: asyncHandler( function (req, res) {
+ /*create_admin_user: asyncHandler( function (req, res) {
     // checks for all required user input
     if (!req.param('name')) return RespService.e(res, 'Missing name');
     if (!req.param('email')) return RespService.e(res, 'Missing email');
@@ -28,7 +28,7 @@ module.exports = {
     catch(err) { return RespService.e(res, 'User creation error: ' + err); }
         
     return RespService.s(res, users_object);  // respond success with user data
-  }), 
+  }), */
   
   
   /**
