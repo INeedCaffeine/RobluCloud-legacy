@@ -30,10 +30,12 @@ module.exports.connections = {
     database: 'rc'
   },
   productionServer: {
-	  adapter: 'sails-postgresql',
-	  url: process.env.DATABASE_URL,
+    adapter: 'sails-postgresql',
     pool: false,
-    ssl: true
+    ssl: true,
+    user: 'ubuntu',
+    password: 'underpressure',
+    database: 'rc',
   },
 
 };
