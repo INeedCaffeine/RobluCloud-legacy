@@ -102,6 +102,6 @@ module.exports = {
       return RespService.s(res, users_ref2);
     }
     return RespService.s(res, user_ref);
-  }),
+  })
   
 };
