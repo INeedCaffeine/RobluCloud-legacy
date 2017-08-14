@@ -59,16 +59,19 @@ module.exports = {
     if(!req.param('active')) return RespService.e(res, 'Missing title of active event');
     if(!req.param('device')) return RespService.e(res, 'Missing device ID');
     
+    console.log(req.param('device'));
+    
+    try {
+      var query1 = {code: req.param('code')};
+      var teams_ref = await(Teams.findOne(query1));
+      if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
+    } catch(err) { return RespService.e(res, 'device unkownnw'); }
+    
+    
     // Update team model
     var query2 = {code: req.param('code'), signed_in_device: req.param('device')};
     try {var teams_ref = await(Teams.update(query2, {active_event: req.param('active')})); }
     catch(err) {}
-    
-    try {
-      var query1 = {code: req.param('code'), signed_in_device: req.param('device')};
-      var teams_ref = await(Teams.findOne(query1));
-      if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'); }
     
     // Remove all the old data if it's there
     var query = {code: req.param('code')};
