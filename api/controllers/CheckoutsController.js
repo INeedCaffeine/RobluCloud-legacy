@@ -62,7 +62,7 @@ module.exports = {
     console.log(req.param('device'));
     
     try {
-      var query1 = {code: '1sqf3vm02'};
+      var query1 = {code: req.param('code')};
       var team = await(Teams.findOne(query1));
       console.log(team);
       if(!(team.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
