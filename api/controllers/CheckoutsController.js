@@ -215,7 +215,7 @@ module.exports = {
       var query1 = {code: req.param('code'), signed_in_device: req.param('device')};
       var teams_ref = await(Teams.findOne(query1));
       if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { console.log(err); return RespService.e(res, 'device unkownnw'); }
+    } catch(err) { return RespService.e(res, 'device unkownnw'); }
     
     // query InCheckouts and see if there are any fields there for our team
     var query = {code: req.param('code')};

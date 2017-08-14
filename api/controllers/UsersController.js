@@ -87,7 +87,6 @@ module.exports = {
     // check if the team exists
     var tempq = {code: req.param('code')};
     try { var temp = await(Teams.findOne(tempq));
-    console.log(temp);
     if(temp == null) return RespService.e(res, 'nteam does not exist'); }
     catch(err) { return RespService.e(res, err+'team does not exist'); }
 
