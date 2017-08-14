@@ -49,6 +49,8 @@ module.exports = {
    * 
    */
   initPushCheckouts: asyncHandler( function (req, res) {
+    console.log(req.param('auth'));
+    
     // Authenticate the user
     try { user = await(AuthService.authenticate_async(req, false)); }
     catch(err) { return RespService.e(res, "User authentication error" + err); }
