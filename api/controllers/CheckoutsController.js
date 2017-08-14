@@ -65,7 +65,7 @@ module.exports = {
       var query1 = {code: req.param('code')};
       var teams_ref = await(Teams.findOne(query1));
       if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'); }
+    } catch(err) { return RespService.e(res, 'device unkownnw'+err); }
     
     
     // Update team model
