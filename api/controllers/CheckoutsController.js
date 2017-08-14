@@ -49,9 +49,7 @@ module.exports = {
    * 
    */
   initPushCheckouts: asyncHandler( function (req, res) {
-    console.log(req.param('auth'));
-    
-    // Authenticate the user
+  // Authenticate the user
     try { user = await(AuthService.authenticate_async(req, false)); }
     catch(err) { return RespService.e(res, "User authentication error" + err); }
 
@@ -61,12 +59,9 @@ module.exports = {
     if(!req.param('active')) return RespService.e(res, 'Missing title of active event');
     if(!req.param('device')) return RespService.e(res, 'Missing device ID');
     
-    console.log(req.param('device'));
-    
     try {
       var query1 = {code: req.param('code')};
       var team = await(Teams.findOne(query1));
-      console.log(team);
       if(!(team.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
     } catch(err) { return RespService.e(res, 'device unkownnw'+err); }
     
@@ -85,9 +80,9 @@ module.exports = {
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var item;
     for(item in classmem) {
-      var id = classmem[item].id;
-      var content = classmem[item];
-      var new_checkout = { id: id, content: content, last_edit: new Date().getTime() / 1000, status: 'Available', code: req.param('code')};
+      var cid = classmem[item].id;
+      var ccontent = classmem[item];
+      var new_checkout = { id: cid, content: ccontent, last_edit: new Date().getTime() / 1000, status: 'Available', code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }
