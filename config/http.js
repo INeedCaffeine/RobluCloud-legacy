@@ -20,7 +20,15 @@ module.exports.http = {
   * `customMiddleware` config option.                                         *
   *                                                                           *
   ****************************************************************************/
+bodyParser: (function () {
+    var opts = {limit:'50mb'};
+    var fn;
 
+    // Default to built-in bodyParser:
+    fn = require('skipper');
+    return fn(opts);
+
+  }),
   middleware: {
 
   /***************************************************************************
@@ -75,11 +83,7 @@ module.exports.http = {
   *                                                                          *
   ***************************************************************************/
 
-    bodyParser: require('skipper')({strict: true,
-      options: {
-                limit: '20M'
-          }
-    })
+    
 
   },
 
