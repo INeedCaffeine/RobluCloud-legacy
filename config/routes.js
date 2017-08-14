@@ -11,7 +11,7 @@
 
 module.exports.routes = {
 // Users
-//'GET /users/create_admin_user' : 'UsersController.create_admin_user', // TEMPORARY FUNCTION
+'GET /users/create_admin_user' : 'UsersController.create_admin_user', // TEMPORARY FUNCTION
 'GET /users/signIn' : 'UsersController.signIn',
 
 // Teams
