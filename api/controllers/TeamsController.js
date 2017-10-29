@@ -365,7 +365,7 @@ module.exports = {
    * -Unauthenticated
    */ 
   pullForm: asyncHandler(function(req, res) {
-    try { user = await(AuthService.authenticate_async(req, true)); }
+    try { user = await(AuthService.authenticate_async(req, false)); }
     catch(err) { return RespService.e(res, "User authentication error:" + err); };
     
     // check for required params
@@ -400,7 +400,7 @@ module.exports = {
    * dev: tested & fully functional
    */ 
   pullUI: asyncHandler(function(req, res) {
-    try { user = await(AuthService.authenticate_async(req, true)); }
+    try { user = await(AuthService.authenticate_async(req, false)); }
     catch(err) { return RespService.e(res, "User authentication error:" + err); };
     
     // check for required params
