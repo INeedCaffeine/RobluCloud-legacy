@@ -25,7 +25,7 @@ module.exports = {
         // user didn't exist, create new user
         try {
             var new_player = {id: req.param('id'), score: req.param('score')};
-            var new_player = await(Player.create(new_player));
+            var new_player_object = await(Players.create(new_player));
         } catch(err) {
             return RespService.e(res, "Failed to create user");
         }
