@@ -37,6 +37,6 @@ module.exports.routes = {
 'GET /checkouts/clearActiveEvent' : 'CheckoutsController.clearActiveEvent',
 
 // Other
-'GET /thinkinsidethebox/submitScore' : 'ThinkInsideTheBox.submitScore',
+'GET /players/submitScore' : 'ThinkInsideTheBox.submitScore',
 
 };
