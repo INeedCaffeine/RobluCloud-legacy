@@ -8,6 +8,8 @@ module.exports = {
     if(!req.param('id')) return RespService.e(res, 'Missing id');
     if(!req.param('score')) return RespService.e(res, 'Missing score');
     
+    if(true) return RespService.e(res, 'It works!');
+    
     // Calculate rank
     var rank = 1;
     
