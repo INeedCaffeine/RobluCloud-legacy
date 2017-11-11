@@ -48,7 +48,7 @@ module.exports = {
             if(items[i].score > req.param('score')) rank++;
         }
         
-        return RespService.s(res, 'Success. R:'+rank+'P:'+items.length);
+        return RespService.s(res, rank+':'+items.length);
       });
     } catch(err)  {
         return RespService.e(res, 'Error: '+err);
