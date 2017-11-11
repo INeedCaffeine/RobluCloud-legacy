@@ -44,7 +44,8 @@ module.exports = {
     var toReturnItems = [];
     
     // calculate our rank
-    await(Players.find({}).exec(function(err, items) { // returns all received checkouts assosicated with this team
+    var query2 = {common: 0};
+    await(Players.find(query2).exec(function(err, items) { // returns all received checkouts assosicated with this team
         
         // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
         for(var i = 0; i < items.length; i++) {
