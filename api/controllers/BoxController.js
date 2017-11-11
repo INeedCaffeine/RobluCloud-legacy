@@ -44,11 +44,15 @@ module.exports = {
     try {
     Players.find({}).exec(function(err, items) { // returns all received checkouts assosicated with this team
         // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
+        var players = 0;
         for(i = 0; i < items.length; i++) {
+            if(items[i].score == 0) continue;
+            
             if(items[i].score > req.param('score')) rank++;
+            players++;
         }
         
-        return RespService.s(res, rank+':'+items.length);
+        return RespService.s(res, rank+':'+players);
       });
     } catch(err)  {
         return RespService.e(res, 'Error: '+err);
