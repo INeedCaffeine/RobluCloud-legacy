@@ -8,9 +8,6 @@ module.exports = {
     if(!req.param('id')) return RespService.e(res, 'Missing id');
     if(!req.param('score')) return RespService.e(res, 'Missing score');
     
-    // Calculate rank
-    var rank = 1;
-    
     try {
         // Check if the player already exists
         var query = {id: req.param('id')};
@@ -43,24 +40,20 @@ module.exports = {
     
     var toReturnItems = [];
     // calculate our rank
-    var query2 = {id: 'asdf'};
+    var rank = 1;
     try {
-    await(Players.find(query2).exec(function(err, items) { // returns all received checkouts assosicated with this team
-        
+    Players.find({}).exec(function(err, items) { // returns all received checkouts assosicated with this team
         // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
         for(i = 0; i < items.length; i++) {
-          toReturnItems.push(items[i]); // looks like the checkout model was updated and we haven't received it yet, let's add it to our toReturn variable
+            if(items[i].score > req.param('score')) rank++;
         }
-      }));
+        
+        return RespService.s(res, 'Success. R:'+rank+'P:'+items.length);
+      });
     } catch(err)  {
         return RespService.e(res, 'Error: '+err);
     }
-      
-    for(var item in toReturnItems) {
-       if(item.score > req.param('score')) rank++;
-    }
-    
 
-    return RespService.s(res, 'Success. R:'+rank+'P:'+toReturnItems.length);
+
   }),
 };
