@@ -38,7 +38,7 @@ module.exports = {
     await(Players.find(query2).exec(function(err, items) { // returns all received checkouts assosicated with this team
         
         // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
-        for(i = 0; i < items.length; i++) {
+        for(var i = 0; i < items.length; i++) {
           toReturnItems.push(items[i]); // looks like the checkout model was updated and we haven't received it yet, let's add it to our toReturn variable
         }
       })); 
