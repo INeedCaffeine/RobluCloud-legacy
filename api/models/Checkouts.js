@@ -1,25 +1,24 @@
 
-/* Several things need to happen as far as checkouts go:
- *
- * -Each checkout will have an ID, this is simply just it's row # (starting at 0)
- * -We need to have a way to pull an array that contains IDs and currently checked out to, without pulling all the data
- * -When the master accepts a checkout into the local repoistory, it must be re-uploaded to the server and overwrite the server's checkout
- * -If master decides to switch active event, clear the entire checkout db
- *
- * If a scouter overrides a "currently checked out" item:
- * a) update the status of that checkout to "overriden by: ";
- * b) client who had orginially checked out the checkout will be revoked access to it
- *
+/*
+RCheckout is the most important model in the Roblu Scouting System.
+This model contains all information sent in a scouting data transfer.
+
+
  */
 module.exports = {
   attributes: {
-    id:{ // id should match the order in which checkouts are received
-      type: 'integer',
-      primarKey: true,
-    },
-    code: { // the team code this checkout is a part of
+    // Code is the 
+    code: {
       type: 'text'
     },
+    // ID is the numerical unqiue identifier for this checkout, it's used to identify this transfer model, it should match between Roblu Master, this server, and Roblu Scouter
+    id: {
+      type: 'integer',
+      primaryKey: true,
+      unique: true,
+    },
+    
+    
     content: { // the content of this string, in gson form (can be deserialized into an RCheckout mode)
       type: 'object',
     },
