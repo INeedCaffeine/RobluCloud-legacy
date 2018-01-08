@@ -3,77 +3,33 @@ var await = require('asyncawait/await');
 var asyncHandler = require('async-handler')(async, await);
 var bcrypt = require('bcrypt-nodejs');
 
-/**
- * CheckoutsController manages two databases: Checkouts & InCheckouts
- * 
- * Checkouts manages the full copy of all available checkouts models that scouters can pull.
- * This database contains the checkouts for every single team, meaning that this database will be heavily modified.
- * 
- * Checkouts database is initially populated when the master calls init_sync, calling init_sync will also clear the old data (because the master is essentially uploading a new event then)
- * 
- * The only other changes that can happen to the database:
- * -Scouter checks out a checkout model, must change status from 'Available' to 'Checked out'
- * -Scouter checks out an overriden model, must change status from 'Check out' to 'Overriden'
- * -Master either automatically or explicity confirms a received checkout, which is then merged back into the database
- * 
- * Ways that things can be pulled:
- * -Scouter uses "smart pull". Factors: 1) Pass in array of last sync ids, will only return checkouts that the scouter hasn't seen yet 2) If we have a checkout that is currently checked out locally and we get it back in a return, then it will be deleted locally
- *
- * InCheckouts manages the fully copy of all received checkout models that scouters have checked as "completed".
- * This database contains the checkouts for every single team, meaning that this database will be heavily modified.
- * 
- * InCheckouts database is populated when a scouter fills in data for their checkout model and confirms it for uploading.
- * 
- * The only other events that can happen:
- * -Master pulls received checkouts, then they're deleted from the database
- * 
- * 
+/*
+ * CheckoutsController manages the Checkouts database, where all the scouting data is located
  */
 module.exports = {
-  /**
-   * For roll: MASTER
-   * 
-   * This will clear out any old data from both InCheckouts & Checkouts and push the new list of checkouts.
-   * 
-   * Required params:
-   * -content: the serialized RCheckout model in string form
-   * -code: the team code to mark these checkouts a part of
-   * -active: the title of the active event
-   * -device: unique device identifier
-   * 
-   * Possible returns:
-   * -string 'success': everything was pushed succesfully
-   * -string 'initPushCheckouts() failed with error: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
+
+  /*
+   * Uploads a new event to the server and flags the sync system as active.
    */
-  initPushCheckouts: asyncHandler( function (req, res) {
-  // Authenticate the user
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error" + err); }
+  init: asyncHandler( function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
-    if(!req.param('content')) return RespService.e(res, 'Missing content');
-    if(!req.param('code')) return RespService.e(res, 'Missing code');
-    if(!req.param('active')) return RespService.e(res, 'Missing title of active event');
-    if(!req.param('device')) return RespService.e(res, 'Missing device ID');
-    
+    if (!req.param('code') || !req.param('number') || !req.param('active_event_name') || !req.param('form') || !req.param('ui')) return RespService.e(res, 'Missing a parameter.');
+
+    // Get a team model reference
     try {
-      var query1 = {code: req.param('code')};
-      var team = await(Teams.findOne(query1));
-      if(!(team.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'+err); }
+      var query = {code: req.param('code')};
+      await(Teams.update(query, {
+        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: new Date().getTime() / 1000
+        , form: req.param('form'), ui: req.param('ui'), active: true
+      }));
+    } catch(err) { return RespService.e(res, 'Failed to update team model'); }
     
-    
-    // Update team model
-    var query2 = {code: req.param('code'), signed_in_device: req.param('device')};
-    try {var teams_ref = await(Teams.update(query2, {active_event: req.param('active')})); }
-    catch(err) {}
-    
-    // Remove all the old data if it's there
+    // Remove old data from checkouts if applicable
     var query = {code: req.param('code')};
-    try { await(Checkouts.destroy(query)); await(InCheckouts.destroy(query)); }
+    try { await(Checkouts.destroy(query)); }
     catch(err) {}
     
     // Loop through the JSON array of received checkouts
@@ -82,261 +38,157 @@ module.exports = {
     for(item in classmem) {
       var cid = classmem[item].id;
       var ccontent = classmem[item];
-      var new_checkout = { id: cid, content: ccontent, last_edit: new Date().getTime() / 1000, status: 'Available', code: req.param('code')};
+      var new_checkout = { id: cid, content: ccontent, time: new Date().getTime() / 1000, status: 0, code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }
 
     return RespService.s(res, teams_ref);
   }),
-  
-  /**
-   * For roll: MASTER
-   * 
-   * This will clear out any old data from both InCheckouts & Checkouts
-   * 
-   * Required params:
-   * -code: the team code to mark these checkouts a part of
-   * -device: unique device identifier
-   * 
-   * Possible returns:
-   * -string 'success': everything was pushed succesfully
-   * -string 'initPushCheckouts() failed with error: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
+
+  /*
+   * Removes all scouting data for an event and the team's syncing system as in-active
    */
-  clearActiveEvent: asyncHandler(function (req, res) {
-    // Authenticate the user
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error:" + err); };
+  purge: asyncHandler(function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
     if(!req.param('code')) return RespService.e(res, 'Missing code');
-    if(!req.param('device')) return RespService.e(res, 'Missing device ID');
-    
+
+    // Reset all the team model data
     try {
-      var query1 = {code: req.param('code'), signed_in_device: req.param('device')};
+      var query1 = {code: req.param('code')};
       var teams_ref = await(Teams.findOne(query1));
-      if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'); }
+      await(Teams.update(query1, { active: false, active_event_name: null, last_content_edit: 0, form: null, ui: null }));
+    } catch(err) { return RespService.e(res, 'database fail'); }
     
     // Remove all the old data if it's there
     var query = {code: req.param('code')};
-    try { await(Checkouts.destroy(query)); await(InCheckouts.destroy(query)); }
-    catch(err) {}
-    
-    // Update team model
-    var query2 = {code: req.param('code'), signed_in_device: req.param('device')};
-    try {var teams_ref = await(Teams.update(query2, {ui: null, form: null, active_event: 'null'})); }
+    try { await(Checkouts.destroy(query)); }
     catch(err) {}
     
     return RespService.s(res, teams_ref);
   }),
-  
-  /**
-   * For roll: MASTER
-   * 
-   * This will merge the checkout back into the database.
-   * 
-   * Required params:
-   * -content: the serialized RCheckout
-   * -status: the status (eg 'Completed by Will D.')
-   * -id: the matching local ID of the checkout to update (eg 0,1,etc)
-   * -code: the team's code
-   * -device: unique device identifier
-   * 
-   * Possible returns:
-   * -string 'success': the checkout was updated successfully
-   * -string 'Database fail: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
+ /*
+ * Updates only meta level changes for multiple checkouts
+ * Note: Make sure to strip content data from the model before uploading to save data
+ */
+  pushMetaChanges: asyncHandler(function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
+
+    // Check for required params
+    if (!req.param('content')) return RespService.e(res, 'Missing content');
+    if (!req.param('code')) return RespService.e(res, 'Missing code');
+
+    // Loop through the JSON array of received checkouts
+    var classmem = JSON.parse(req.param('content'), 'utf8');
+    var subitem;
+    var item;
+    for (item in classmem) {
+      // Get the variables for this checkout
+      var id2 = classmem[item].id;
+      var status2 = classmem[item].status;
+      var content2 = classmem[item].team;
+      var nameTag2 = classmem[item].nameTag2;
+      var time = classmeme[item].time;
+
+      var query = { code: req.param('code'), id: id2 };
+
+      try { await(Checkouts.update(query, { status: status2, nameTag: nameTag2, last_edit: time })); }
+      catch (err) { return RespService.e(res, 'pushCheckout() failed with error: ' + err); }
+
+    }
+    return RespService.s(res, 'success');
+  }),
+  /*
+   * Updates the content and status for multiple checkouts
    */
-  pushCheckout: asyncHandler(function(req, res) {
-    // Authenticate the user
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error:" + err); }
+  pushCheckouts: asyncHandler(function(req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
     if(!req.param('content')) return RespService.e(res, 'Missing content');
     if(!req.param('code')) return RespService.e(res, 'Missing code');
-    if(!req.param('device')) return RespService.e(res, 'Missing device ID');
-    
-    try {
-      var query1 = {code: req.param('code'), signed_in_device: req.param('device')};
-      var teams_ref = await(Teams.findOne(query1));
-      if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'); }
     
     // Loop through the JSON array of received checkouts
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var subitem;
     var item;
-    for(item in classmem) {
-      var cid = classmem[item].id;
-      var status = classmem[item].status;
+    for (item in classmem) {
+      // Get the variables for this checkout
+      var id2 = classmem[item].id;
+      var status2 = classmem[item].status;
+      var content2 = classmem[item].team;
+      var nameTag2 = classmem[item].nameTag2;
+      var time = classmeme[item].time;
+
+      var query = {code: req.param('code'), id: id2};
       
-      var contente = classmem[item];
-      var query = {code: req.param('code'), id: cid};
-      
-      try { await(Checkouts.update(query, {content: contente, last_edit: new Date().getTime() / 1000})); }
+      try { await(Checkouts.update(query, {content: content2, status: status2, nameTag: nameTag2, last_edit: time})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
     return RespService.s(res, 'success');
   }),
-  
-  /**
-   * For roll: MASTER
-   * 
-   * This will pull all checkouts that scouters have marked as complete, after they're pulled, it will delete them from receivedCheckouts.
-   * 
-   * Required params:
-   * -code: the team's code
-   * -device: unique device identifier
-   * 
-   * Possible returns:
-   * -object: items array: JSON array representing received checkouts
-   * -string 'Database fail: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
-   */ 
-  pullReceivedCheckouts: asyncHandler(function(req, res) {
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error:" + err); }
-    
+
+  /*
+   * Pulls all checkouts with verified time stamp
+   */
+  pullCheckouts: asyncHandler(function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
+
     // check for required params
-    if(!req.param('code')) return RespService.e(res, 'Missing team code');
-    if(!req.param('device')) return RespService.e(res, 'Missing device ID');
-    
-        try {
-      var query1 = {code: req.param('code'), signed_in_device: req.param('device')};
-      var teams_ref = await(Teams.findOne(query1));
-      if(!(teams_ref.signed_in_device === req.param('device'))) return RespService.e(res, 'device unkwown');
-    } catch(err) { return RespService.e(res, 'device unkownnw'); }
-    
-    // query InCheckouts and see if there are any fields there for our team
-    var query = {code: req.param('code')};
+    if (!req.param('code') || !req.param('time')) return RespService.e(res, 'Missing a parameter');
+
+    var query = { code: req.param('code') };
     try {
       // new array
       var toReturnItems = [];
-        
-      await(InCheckouts.find(query).exec(function(err, items) { // returns all received checkouts assosicated with this team
-        
-        // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
-        for(i = 0; i < items.length; i++) {
-          toReturnItems.push(items[i]); // looks like the checkout model was updated and we haven't received it yet, let's add it to our toReturn variable
+
+      await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
+
+        for (i = 0; i < items.length; i++) {
+          // Only receive the checkout if it's completed and verified with the submitted time stamp
+          if (items[i].time > req.param('time')) toReturnItems.push(items[i]);
         }
       }));
-      
-      // Delete all items that contain team code, since we've received them now
-      await(InCheckouts.destroy(query));
-      
+
       return RespService.s(res, toReturnItems);
-      
-    }
-    catch(err) { return RespService.e(res, 'Database fail: '+err) };
-  }),
 
-  /**
-   * For roll: SCOUTER
-   * 
-   * Updates the statuses of a group of checkout items
-   * 
-   * Required params:
-   * -content: the serialized RCheckout model in string form
-   * -code: the team code to mark these checkouts a part of
-   * -active: the title of the active event
-   * -device: unique device identifier
-   * 
-   * Possible returns:
-   * -string 'success': everything was pushed succesfully
-   * -string 'initPushCheckouts() failed with error: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
+    }
+    catch (err) { return RespService.e(res, 'Database fail: ' + err) };
+  }),
+  /*
+   * Pulls all checkouts with verified time stamp and status==3 so the master app can parse them
    */
-  pushCheckouts: asyncHandler( function (req, res) {
-    // Authenticate the user
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error:" + err); }
+  pullCompletedCheckouts: asyncHandler(function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
-    // Check for required params
-    if(!req.param('content')) return RespService.e(res, 'Missing content');
-    if(!req.param('code')) return RespService.e(res, 'Missing code');
-    
-    // Loop through the JSON array of received checkouts
-    var classmem = JSON.parse(req.param('content'), 'utf8');
-    var subitem;
-    var item;
-    for(item in classmem) {
-      var cid = classmem[item].id;
-      var status = classmem[item].status;
-      
-      var contente = classmem[item];
-      var query = {code: req.param('code'), id: cid};
-      
-      if(status.startsWith('Completed')) { // if we're uploading a completed checkout from scouter, then we'll send it to the master for merging
-         var new_model = {content: contente, last_edit: new Date().getTime() / 1000, id: cid, code: req.param('code')};
-         try { var created = await(InCheckouts.create(new_model)); 
-         }
-         catch(err) { 
-           return RespService.e(res, 'pushCheckouts() failed with error: '+err); }
-      } else { // ONLY update the master checkouts repo for status, if content needs updating, then it must be done from the master app
-           try { await(Checkouts.update(query, {content: contente, last_edit: new Date().getTime() / 1000})); }
-           catch(err) { return RespService.e(res, 'pushCheckouts() failed with error: '+err); }
-      }
-      
-    }
-    return RespService.s(res, 'success');
-  }),
-  
-
-  /**
-   * For roll: SCOUTER
-   * 
-   * Pulls checkouts from the Checkouts database. This method will be called A LOT (each client updates every couple seconds). In order to reduce
-   * data costs, we require an array (like: 1,2,3,4,5 in string form) of 'last_sync_id' variables for each checkouts. That way, we will only
-   * return checkouts that the SCOUTER hasn't received yet.
-   * 
-   * Required params:
-   * -last_sync: epoch time in ms of last sync time
-   * -code: the team's code
-   * 
-   * Possible returns:
-   * -object: items: items that weren't in sync with local database
-   * -string 'Database fail: (error message)': something went wrong
-   * -Missing a parameter
-   * -Unauthenticated
-   * 
-   */ 
-  pullCheckouts: asyncHandler(function(req, res) {
-    try { user = await(AuthService.authenticate_async(req, false)); }
-    catch(err) { return RespService.e(res, "User authentication error:" + err); };
-    
     // check for required params
-    if(!req.param('last_sync')) return RespService.e(res, 'Missing last sync variable');
-    if(!req.param('code')) return RespService.e(res, 'Missing team code');
-    
-    // look through checkouts
-    var query = {code: req.param('code')};
-    try { 
-      await(Checkouts.find(query).exec(function(err, items) {
-        // new array
-        var toReturnItems = [];
-        
-        // we've received all the team's checkouts, let's get rid of all the ones that don't match their last edit id
-        for(i = 0; i < items.length; i++) {
-          if(req.param('last_sync') < items[i].last_edit) toReturnItems.push(items[i]); // looks like the checkout model was updated and we haven't received it yet, let's add it to our toReturn variable
+    if (!req.param('code') || !req.param('time')) return RespService.e(res, 'Missing a parameter');
+
+    var query = { code: req.param('code') };
+    try {
+      // new array
+      var toReturnItems = [];
+
+      await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
+
+        for (i = 0; i < items.length; i++) {
+          // Only receive the checkout if it's completed and verified with the submitted time stamp
+          if (items[i].time > req.param('time') && items[i].status == 3) toReturnItems.push(items[i]);
         }
-        return RespService.s(res, toReturnItems);
       }));
 
-    }
-    catch(err) { return RespService.e(res, 'Database fail: '+err) };
+      return RespService.s(res, toReturnItems);
 
+    }
+    catch (err) { return RespService.e(res, 'Database fail: ' + err) };
   }),
-    
+
 }

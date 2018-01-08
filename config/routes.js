@@ -12,31 +12,25 @@
 module.exports.routes = {
 // Users
 //'GET /users/create_admin_user' : 'UsersController.create_admin_user', // TEMPORARY FUNCTION
-'GET /users/signIn' : 'UsersController.signIn',
 
 // Teams
-'GET /teams/createTeam' : 'TeamsController.createTeam',
-'POST /teams/deleteTeam' : 'TeamsController.deleteTeam',
 'GET /teams/getTeam' : 'TeamsController.getTeam',
-'GET /teams/regenerateToken' : 'TeamsController.regenerateToken',
-'POST /teams/pushForm' : 'TeamsController.pushForm',
-'GET /teams/pullForm' : 'TeamsController.pullForm',
-'GET /teams/joinTeam' : 'TeamsController.joinTeam',
-'POST /teams/pushUI' : 'TeamsController.pushUI',
-'GET /teams/pullUI' : 'TeamsController.pullUI',
-'GET /teams/getTeamAsAdmin' : 'TeamsController.getTeamAsAdmin',
-'GET /teams/forceSignOut' : 'TeamsController.forceSignOut',
 'GET /teams/isActive' : 'TeamsController.isActive',
+'GET /teams/regenerateCode' : 'TeamsController.regenerateCode',
+'POST /teams/pushForm' : 'TeamsController.pushForm',
+'POST /teams/pushUI' : 'TeamsController.pushUI',
 
 // Checkouts
-'POST /checkouts/initPushCheckouts' : 'CheckoutsController.initPushCheckouts',
-'POST /checkouts/pushCheckout' : 'CheckoutsController.pushCheckout',
-'GET /checkouts/pullReceivedCheckouts' : 'CheckoutsController.pullReceivedCheckouts',
+'POST /checkouts/init' : 'CheckoutsController.init',
+'GET /checkouts/purge' : 'CheckoutsController.purge',
+'POST /checkouts/pushMetaChanges' : 'CheckoutsController.pushMetaChanges',
 'POST /checkouts/pushCheckouts' : 'CheckoutsController.pushCheckouts',
 'GET /checkouts/pullCheckouts' : 'CheckoutsController.pullCheckouts',
-'GET /checkouts/clearActiveEvent' : 'CheckoutsController.clearActiveEvent',
+'GET /checkouts/pullCompletedCheckouts' : 'CheckoutsController.pullCompletedCheckouts',
 
-// Other
-'GET /players/submitScore' : 'BoxController.submitScore',
-
+// Admin
+'GET /admin/getTeam': `AdminController.getTeam`,
+'GET /admin/createTeam': 'AdminController.createTeam',
+'GET /admin/deleteTeam': 'AdminController.deleteTeam',
+'GET /admin/regenerateCode',
 };

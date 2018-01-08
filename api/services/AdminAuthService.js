@@ -1,11 +1,11 @@
 var await = require('asyncawait/await');
-var bcrypt = require('bcrypt-nodejs');  // module used to hash passwords
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = {
 
-  // When authentication is needed, verify user permission and return default status object
-  // required inputs: request object, permission string ("admin" for admin users, or a microservice name such as "players"),
-  // returns the user's id (for admin, returns -1)
+  /*
+   * This authentication method 
+   */
   authenticate_async: function (req, f_admin_required) {
     if (!req.param('auth')) throw new Error('Missing token');
     

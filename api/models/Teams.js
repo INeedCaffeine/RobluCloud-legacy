@@ -1,51 +1,66 @@
+/*
+ * The teams model does NOT correlate with the RTeam model found in Roblu Master and Roblu Scouter. 
+ * It's used to identify a team on the Roblu Server, and contains some general identification info and meta-data.
+ * The team code is top secret, and is the only piece of information required to make changes to a team.
+ *
+ * Team contains some server helper variables, some meta-data items, and some content items.
+ *
+ */
 module.exports = {
   attributes: {
-    number:{
-      // primary key team number I.e 4859
+    /*
+     * Server identification variables, these are variables that are only really important because we're using a server, this is basically account information
+     */
+    code: { // this is the unique code by which this team is identified, it should be kept top secret!
+      type: 'text',
+      notNull: true,
+      unique: true,
       primaryKey: true,
+    },
+    official_team_name: { // the official FRC team name
       type: 'text',
-      notNull: true,
+      unqiue: true,
+    },
+    ownerEmail: { // the owner email address for this account, used only for support purposes
+      type: 'text',
       unique: true,
-    },
-    master: {                   // the owner email address of the account, used mostly for support    
-      type: 'text',
-      unique: true,
       notNull: true,
     },
-    secret: { // secret is a parameter chosen by the account owner that is used for support
+    secret: { // secret is a parameter used as extra verification for support purposes
       type: 'text',
       notNull: true,
     },
-    code: {                     // code used to authenticate data requests by this team
-      type: 'text',
-      notNull: true,
-      unique: true,
+
+    /*
+     * Meta-data level items
+     */
+    number: { // the server only stores the FRC number as sort of courtesy value, different Scouter clients can make use of it for handy UI features, such as "My matches", but it's not required for core functionality
+      primaryKey: true,
+      type: 'integer',
+      defaultsTo: 0,
     },
-    // some extra data for viewing and what not
-    form: { // json serialized form class
+    active_event_name: { // stores the name of the active event, not required for core functionality
+      type: 'text',
+    },
+    last_content_edit: { // returns the last time either FORM or UI were pushed.
+      type: 'integer',
+      defaultsTo: 0,
+    },
+    active: { // stores whether an active event exists, if false, no syncing should occur
+      type: 'boolean',
+      defaultTo: false,
+    },
+
+    /*
+     * Content level items
+     * These items are serialized and compressed, so the server won't actually be able to read them
+     */
+    form: { // stores the RForm model
       type: 'text'
     },
-    last_edit: { // stores the last time this team was pushed, if a scouter's local value for it is less, it will be repulled
-      type: 'integer',
-      notNull: true,
-      defaultsTo: 0
-    },
-    last_ui_edit: {
-      type: 'integer',
-      defaultsTo: 0
-    },
-    ui: { // json serialized UI values
+    ui: { // stores the UI model
       type: 'text'
     },
-    signed_in_device: {
-      type: 'text',
-      notNull: true,
-      defaultsTo: 'null',
-    },
-    active_event: {
-      type: 'text',
-      notNull: true,
-      defaultsTo: 'null'
-    }
+    
   }
 };
