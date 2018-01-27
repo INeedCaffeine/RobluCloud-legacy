@@ -32,5 +32,5 @@ module.exports.routes = {
 'GET /admin/getTeam': `AdminController.getTeam`,
 'GET /admin/createTeam': 'AdminController.createTeam',
 'GET /admin/deleteTeam': 'AdminController.deleteTeam',
-'GET /admin/regenerateCode',
+'GET /admin/regenerateCode'
 };
