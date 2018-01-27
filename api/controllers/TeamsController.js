@@ -37,7 +37,7 @@ module.exports = {
       }
 
       return RespService.s(res, teams_ref);
-    } catch (err) { return RespService.e(res, 'Database fail'); 
+    } catch (err) { return RespService.e(res, 'Database fail'); };
   }),
 
   /*
