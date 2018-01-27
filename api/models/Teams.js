@@ -24,6 +24,7 @@ module.exports = {
     ownerEmail: { // the owner email address for this account, used only for support purposes
       type: 'text',
       unique: true,
+      defaultsTo: '',
       notNull: true,
     },
     secret: { // secret is a parameter used as extra verification for support purposes
