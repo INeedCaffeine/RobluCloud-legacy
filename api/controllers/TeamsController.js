@@ -86,7 +86,7 @@ module.exports = {
         await(Checkouts.update(query, {code: updated.code}));
     } catch (err) {} // ignore this error, if we return after this error, the team could get locked out of their account
 
-    return RespService.s(res, updated.code);
+    return RespService.s(res, updated);
   }),  
   
   /*
