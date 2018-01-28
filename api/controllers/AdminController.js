@@ -37,7 +37,7 @@ module.exports = {
     if (!req.param('secret')) return RespService.e(res, 'Missing secret');
 
     //creates array "new_user" with all the info provided in the call, as well as generated a five character long team code
-    var new_team = { official_team_name: req.param('officialName'), secret: req.param('secret'), owner_email: req.param('ownerEmail'), code: Math.random().toString(36).substring(3, 12), secret: Math.random().toString(36).substring(3, 14)};
+    var new_team = {active: false, official_team_name: req.param('officialName'), secret: req.param('secret'), owner_email: req.param('ownerEmail'), code: Math.random().toString(36).substring(3, 12), secret: Math.random().toString(36).substring(3, 14)};
 
     // creates the new user in the database with the new_user object
     try { var teams_object = await(Teams.create(new_team)); }
