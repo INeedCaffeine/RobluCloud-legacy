@@ -85,4 +85,11 @@ module.exports = {
 
     return RespService.s(res, updated);
   }),
+  /*
+   * Pings the server
+   */
+  ping: asyncHandler(function (req, res) {
+    return RespService.s(res, '');
+  }),
+
 };
