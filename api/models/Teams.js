@@ -19,7 +19,7 @@ module.exports = {
     },
     official_team_name: { // the official FRC team name
       type: 'text',
-      unqiue: true,
+      unique: true,
     },
     ownerEmail: { // the owner email address for this account, used only for support purposes
       type: 'text',
