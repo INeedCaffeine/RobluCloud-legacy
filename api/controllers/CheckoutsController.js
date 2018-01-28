@@ -43,7 +43,7 @@ module.exports = {
       catch(err) {}
     }
 
-    return RespService.s(res, teams_ref);
+    return RespService.s(res, true);
   }),
 
   /*
