@@ -82,6 +82,10 @@ module.exports = {
     try { var updated = await(Teams.update(query, {code: new_code})); }
     catch (err) { return RespService.e(res, 'Failed to regenerate team code'); }
 
+    // Remove secret data
+    updated.owner_email = null;
+    updated.secret = null;
+
     try {
         await(Checkouts.update(query, {code: updated.code}));
     } catch (err) {} // ignore this error, if we return after this error, the team could get locked out of their account
