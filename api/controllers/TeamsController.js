@@ -56,7 +56,7 @@ module.exports = {
     try {
       var teams_ref = await(Teams.findOne(query));
 
-      return RespService.s(res, teams_ref.isActive);
+      return RespService.s(res, teams_ref.active);
     } catch (err) { return RespService.e(res, 'Database fail'); }
   }),
   
