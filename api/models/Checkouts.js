@@ -34,8 +34,7 @@ module.exports = {
     },
     id: { // ID is the numerical unqiue identifier for this checkout, it's used to identify this transfer model, it should match between Roblu Master, this server, and Roblu Scouter
       type: 'integer',
-      primaryKey: true,
-      unique: true,
+      notNull: true,
     },
 
     /*
