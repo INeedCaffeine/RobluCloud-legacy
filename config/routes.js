@@ -29,8 +29,8 @@ module.exports.routes = {
 'GET /checkouts/pullCompletedCheckouts' : 'CheckoutsController.pullCompletedCheckouts',
 
 // Admin
-'GET /admin/getTeam': `AdminController.getTeam`,
+'GET /admin/getTeam': 'AdminController.getTeam',
 'GET /admin/createTeam': 'AdminController.createTeam',
 'GET /admin/deleteTeam': 'AdminController.deleteTeam',
-'GET /admin/regenerateCode' : 'AdminController.regenerateTeam',
+'GET /admin/regenerateCode': 'AdminController.regenerateCode',
 };
