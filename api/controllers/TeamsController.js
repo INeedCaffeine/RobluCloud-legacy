@@ -107,7 +107,7 @@ module.exports = {
     
     // try to update the team's code
     try {
-      var query = {code: req.param('code'), signed_in_device: req.param('device')};
+      var query = {code: req.param('code')};
       var teams_ref = await(Teams.update(query, {form: req.param('content'), last_content_edit: new Date().getTime() / 1000})); 
       return RespService.s(res, 'Form updated successfully');
     } catch(err) {
@@ -129,7 +129,7 @@ module.exports = {
 
     // try to update the team
     try {
-      var query = {code: req.param('code'), signed_in_device: req.param('device')};
+      var query = {code: req.param('code')};
       var d = new Date();
       var n = d.getTime();
       var teams_ref = await(Teams.update(query, {ui: req.param('content'), last_content_edit: new Date().getTime() / 1000})); 
