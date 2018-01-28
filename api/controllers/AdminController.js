@@ -29,7 +29,7 @@ module.exports = {
    */
   createTeam: asyncHandler(function (req, res) {
     try { user = await(AdminAuthService.authenticate_async(req)); }
-    catch (err) { return RespService.e(res, 'Failed to authenticate as Admin'); };
+    catch (err) { return RespService.e(res, 'Failed to authenticate as Admin: '+err); };
 
     // checks for required params
     if (!req.param('official_name')) return RespService.e(res, 'Missing name');

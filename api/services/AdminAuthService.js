@@ -7,7 +7,7 @@ module.exports = {
    * This authentication method 
    */
   authenticate_async: function (req) {
-    if (!req.param('auth')) throw new Error('Missing token');
+    if (!req.param('auth')) throw new Error('Missing auth token');
     
     // lookup token and connected permissions and user info 
     try { var user = await(Admin.findOne({auth: req.param('auth')})); } 
