@@ -44,7 +44,7 @@ module.exports = {
     status: { // an integer status representing the state of this Checkout
       type: 'integer'
     },
-    nameTag: { // the name of the user associated with the status and time tags, the server will ONLY record first name and last initial, to prevent privacy leaks
+    name_tag: { // the name of the user associated with the status and time tags, the server will ONLY record first name and last initial, to prevent privacy leaks
       type: 'text',
       defaultsTo: '',
     },

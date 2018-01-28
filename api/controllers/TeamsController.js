@@ -29,7 +29,7 @@ module.exports = {
     try {
       var teams_ref = await(Teams.findOne(query));
       teams_ref.code = null;
-      teams_ref.ownerEmail = null;
+      teams_ref.owner_email = null;
       teams_ref.secret = null;
 
       if (req.param('time')) {

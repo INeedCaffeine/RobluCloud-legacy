@@ -96,7 +96,7 @@ module.exports = {
 
       var query = { code: req.param('code'), id: id2 };
 
-      try { await(Checkouts.update(query, { status: status2, nameTag: nameTag2, last_edit: time })); }
+      try { await(Checkouts.update(query, { status: status2, name_tag: nameTag2, last_edit: time })); }
       catch (err) { return RespService.e(res, 'pushCheckout() failed with error: ' + err); }
 
     }
@@ -127,7 +127,7 @@ module.exports = {
 
       var query = {code: req.param('code'), id: id2};
       
-      try { await(Checkouts.update(query, {content: content2, status: status2, nameTag: nameTag2, last_edit: time})); }
+      try { await(Checkouts.update(query, {content: content2, status: status2, name_tag: nameTag2, last_edit: time})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }

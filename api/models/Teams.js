@@ -21,7 +21,7 @@ module.exports = {
       type: 'text',
       unique: true,
     },
-    ownerEmail: { // the owner email address for this account, used only for support purposes
+    owner_email: { // the owner email address for this account, used only for support purposes
       type: 'text',
       unique: true,
       defaultsTo: '',

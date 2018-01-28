@@ -16,7 +16,7 @@ module.exports = {
     catch (err) { return RespService.e(res, 'Failed to authenticate as Admin'); };
 
     // use provided parameters for searching
-    var query = { code: req.param('code'), ownerEmail: req.param('ownerEmail'), secret: req.param('secret'), number: req.param('number')};
+    var query = { code: req.param('code'), owner_email: req.param('ownerEmail'), secret: req.param('secret'), number: req.param('number')};
 
     try {
       var teams_ref = await(Teams.findOne(query));
@@ -37,7 +37,7 @@ module.exports = {
     if (!req.param('secret')) return RespService.e(res, 'Missing secret');
 
     //creates array "new_user" with all the info provided in the call, as well as generated a five character long team code
-    var new_team = { official_team_name: req.param('official_name'), ownerEmail: req.param('ownerEmail'), code: Math.random().toString(36).substring(3, 12), secret: Math.random().toString(36).substring(3, 14)};
+    var new_team = { official_team_name: req.param('official_name'), owner_email: req.param('ownerEmail'), code: Math.random().toString(36).substring(3, 12), secret: Math.random().toString(36).substring(3, 14)};
 
     // creates the new user in the database with the new_user object
     try { var teams_object = await(Teams.create(new_team)); }
@@ -54,7 +54,7 @@ module.exports = {
 
     if (!req.param('number')) return RespService.e(res, 'Missing number');
 
-    var team_to_delete = {ownerEmail: req.param('ownerEmail'), official_name: req.param('official_name')};
+    var team_to_delete = {owner_email: req.param('ownerEmail'), official_name: req.param('official_name')};
 
     try { var ref = await(Teams.destroy(team_to_delete)); }
     catch (err) { return RespService.e(res, err); }
@@ -68,7 +68,7 @@ module.exports = {
     try { user = await(AdminAuthService.authenticate_async(req)); }
     catch (err) { return RespService.e(res, 'Failed to authenticate as Admin'); };
 
-    var query = {official_name: req.param('official_name'), ownerEmail: req.param('ownerEmail') };
+    var query = {official_name: req.param('official_name'), owner_email: req.param('ownerEmail') };
 
     var new_code = Math.random().toString(36).substring(3, 12);
 
