@@ -55,7 +55,7 @@ module.exports = {
     if (!req.param('ownerEmail')) return RespService.e(res, 'Missing owner email');
     if (!req.param('officialName')) return RespService.e(res, 'Missing official name');
 
-    var team_to_delete = {owner_email: req.param('ownerEmail'), official_name: req.param('officialName')};
+    var team_to_delete = {owner_email: req.param('ownerEmail'), official_team_name: req.param('officialName')};
 
     try { var ref = await(Teams.destroy(team_to_delete)); }
     catch (err) { return RespService.e(res, err); }
@@ -72,7 +72,7 @@ module.exports = {
     if (!req.param('ownerEmail')) return RespService.e(res, 'Missing owner email');
     if (!req.param('officialName')) return RespService.e(res, 'Missing official name');
 
-    var query = {official_name: req.param('officialName'), owner_email: req.param('ownerEmail') };
+    var query = {official_team_name: req.param('officialName'), owner_email: req.param('ownerEmail') };
 
     var new_code = Math.random().toString(36).substring(3, 12);
 
