@@ -19,6 +19,7 @@ module.exports = {
     },
     official_team_name: { // the official FRC team name
       type: 'text',
+      notNull: true,
     },
     owner_email: { // the owner email address for this account, used only for support purposes
       type: 'text',
@@ -40,6 +41,8 @@ module.exports = {
     },
     active_event_name: { // stores the name of the active event, not required for core functionality
       type: 'text',
+      notNull: true,
+      defaultsTo: '',
     },
     last_content_edit: { // returns the last time either FORM or UI were pushed.
       type: 'integer',
@@ -55,10 +58,15 @@ module.exports = {
      * These items are serialized and compressed, so the server won't actually be able to read them
      */
     form: { // stores the RForm model
-      type: 'text'
+      type: 'text',
+      notNull: true,
+      defaultsTo: '',
+
     },
     ui: { // stores the UI model
-      type: 'text'
+      type: 'text',
+      notNull: true,
+      defaultsTo: '',
     },
     
   }
