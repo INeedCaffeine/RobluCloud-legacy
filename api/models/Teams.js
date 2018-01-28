@@ -23,7 +23,6 @@ module.exports = {
     },
     owner_email: { // the owner email address for this account, used only for support purposes
       type: 'text',
-      unique: true,
       defaultsTo: '',
       notNull: true,
     },
@@ -36,7 +35,6 @@ module.exports = {
      * Meta-data level items
      */
     number: { // the server only stores the FRC number as sort of courtesy value, different Scouter clients can make use of it for handy UI features, such as "My matches", but it's not required for core functionality
-      primaryKey: true,
       type: 'integer',
       defaultsTo: 0,
     },
