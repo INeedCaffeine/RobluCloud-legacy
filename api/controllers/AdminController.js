@@ -60,7 +60,7 @@ module.exports = {
     try { var ref = await(Teams.destroy(team_to_delete)); }
     catch (err) { return RespService.e(res, err); }
 
-    return RespService.s(res, ref);
+    return RespService.s(res, team_to_delete);
   }),
   /*
    * Regenerates a team's code without needing access to their old one
