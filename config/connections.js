@@ -21,13 +21,13 @@
 
 module.exports.connections = {
 
-  rc: {
+  production_server: {
     adapter: 'sails-postgresql',
     host: process.env.OPENSHIFT_POSTGRESQL_DB_HOST || 'localhost',
     port: process.env.OPENSHIFT_POSTGRESQL_DB_PORT || 5432,
     user: 'ubuntu',
     password: 'underpressure',
-    database: 'rc'
+    database: 'production_server'
   },
   productionServer: {
     adapter: 'sails-postgresql',
@@ -35,7 +35,7 @@ module.exports.connections = {
     ssl: true,
     user: 'ubuntu',
     password: 'underpressure',
-    database: 'rc',
+    database: 'production_server',
   },
 
 };
