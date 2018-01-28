@@ -17,7 +17,7 @@ module.exports.models = {
   * connections (see `config/connections.js`)                                *
   *                                                                          *
   ***************************************************************************/
-  connection: 'rc',
+  connection: 'production_database',
   autoPK: true,
   /***************************************************************************
   *                                                                          *
