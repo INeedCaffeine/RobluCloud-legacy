@@ -3,8 +3,10 @@
     "",
     "\\api",
     "\\api\\controllers",
-    "\\api\\models"
+    "\\api\\models",
+    "\\api\\services",
+    "\\config"
   ],
-  "SelectedNode": "\\api\\models\\Checkouts.js",
+  "SelectedNode": "\\api\\models\\Teams.js",
   "PreviewInSolutionExplorer": false
 }
