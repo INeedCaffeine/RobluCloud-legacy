@@ -123,9 +123,9 @@ module.exports = {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
           if (req.param('time') < items[i].time) toReturnItems.push(items[i]);
         }
-      }));
 
-      return RespService.s(res, 'found: ' + toReturnItems.length);
+        return RespService.s(res, toReturnedItems);
+      }));
 
     }
     catch (err) { return RespService.e(res, 'Database fail: ' + err) };
