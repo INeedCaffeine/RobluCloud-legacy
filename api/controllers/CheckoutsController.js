@@ -106,8 +106,6 @@ module.exports = {
    * Pulls all checkouts with verified time stamp
    */
   pullCheckouts: asyncHandler(function (req, res) {
-    return RespService.s(res, 'failure');
-
     try { team = await(TeamAuthService.authenticate_async(req)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
@@ -127,7 +125,7 @@ module.exports = {
         }
       }));
 
-      return RespService.s(res, toReturnItems);
+      return RespService.s(res, 'found: ' + toReturnItems.length);
 
     }
     catch (err) { return RespService.e(res, 'Database fail: ' + err) };
