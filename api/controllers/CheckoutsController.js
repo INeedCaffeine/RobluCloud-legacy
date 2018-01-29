@@ -124,7 +124,7 @@ module.exports = {
           if (req.param('time') < items[i].time) toReturnItems.push(items[i]);
         }
 
-        return RespService.s(res, toReturnedItems);
+        return RespService.s(res, toReturnItems);
       }));
 
     }
