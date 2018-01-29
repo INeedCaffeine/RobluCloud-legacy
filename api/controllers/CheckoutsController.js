@@ -70,38 +70,6 @@ module.exports = {
     
     return RespService.s(res, teams_ref);
   }),
- /*
- * Updates only meta level changes for multiple checkouts
- * Note: Make sure to strip content data from the model before uploading to save data
- */
-  pushMetaChanges: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
-    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
-
-    // Check for required params
-    if (!req.param('content')) return RespService.e(res, 'Missing content');
-    if (!req.param('code')) return RespService.e(res, 'Missing code');
-
-    // Loop through the JSON array of received checkouts
-    var classmem = JSON.parse(req.param('content'), 'utf8');
-    var subitem;
-    var item;
-    for (item in classmem) {
-      // Get the variables for this checkout
-      var id2 = classmem[item].id;
-      var status2 = classmem[item].status;
-      var content2 = classmem[item].team;
-      var nameTag2 = classmem[item].nameTag2;
-      var time = classmeme[item].time;
-
-      var query = { code: req.param('code'), id: id2 };
-
-      try { await(Checkouts.update(query, { status: status2, name_tag: nameTag2, last_edit: time })); }
-      catch (err) { return RespService.e(res, 'pushCheckout() failed with error: ' + err); }
-
-    }
-    return RespService.s(res, 'success');
-  }),
   /*
    * Updates the content and status for multiple checkouts
    */

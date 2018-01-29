@@ -23,7 +23,6 @@ module.exports.routes = {
 // Checkouts
 'POST /checkouts/init' : 'CheckoutsController.init',
 'GET /checkouts/purge' : 'CheckoutsController.purge',
-'POST /checkouts/pushMetaChanges' : 'CheckoutsController.pushMetaChanges',
 'POST /checkouts/pushCheckouts' : 'CheckoutsController.pushCheckouts',
 'GET /checkouts/pullCheckouts' : 'CheckoutsController.pullCheckouts',
 'GET /checkouts/pullCompletedCheckouts' : 'CheckoutsController.pullCompletedCheckouts',
