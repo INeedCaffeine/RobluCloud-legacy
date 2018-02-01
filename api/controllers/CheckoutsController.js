@@ -91,7 +91,7 @@ module.exports = {
       var status2 = classmem[item].status;
       var content2 = classmem[item].team;
       var nameTag2 = classmem[item].nameTag;
-      var time2 = classmeme[item].time;
+      var time2 = classmem[item].time;
 
       var query = {code: req.param('code'), id: id2};
       
