@@ -43,10 +43,6 @@ module.exports = {
     status: { // an integer status representing the state of this Checkout
       type: 'integer'
     },
-    name_tag: { // the name of the user associated with the status and time tags, the server will ONLY record first name and last initial, to prevent privacy leaks
-      type: 'text',
-      defaultsTo: '',
-    },
     time: { // stores the last time this checkout was edited, helps to reduce data transfers, UNIX seconds format
       type: 'integer',
       notNull: true,
