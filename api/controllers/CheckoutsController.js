@@ -148,7 +148,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time > (req.param('time') / 1000) && items[i].status == 3) toReturnItems.push(items[i]);
+          if (items[i].time > (req.param('time') / 1000) && items[i].status == 2) toReturnItems.push(items[i]);
         }
       }));
 
