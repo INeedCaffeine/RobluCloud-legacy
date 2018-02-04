@@ -60,7 +60,7 @@ module.exports = {
     try {
       var query1 = {code: req.param('code')};
       var teams_ref = await(Teams.findOne(query1));
-      await(Teams.update(query1, { active: false, active_event_name: null, last_content_edit: 0, form: null, ui: null }));
+      await(Teams.update(query1, { active: false, active_event_name: '', last_content_edit: 0, form: '', ui: ''}));
     } catch(err) { return RespService.e(res, 'database fail'); }
     
     // Remove all the old data if it's there
