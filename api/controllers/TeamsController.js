@@ -33,7 +33,7 @@ module.exports = {
       teams_ref.secret = null;
 
       if (req.param('time')) {
-        if (req.param('time') >= teams_ref.last_content_edit) return RespService.s(res, 'You are up to date (no team data available)!');
+        if (req.param('time') > teams_ref.last_content_edit.getTime()) return RespService.s(res, 'You are up to date (no team data available)!');
       }
 
       return RespService.s(res, teams_ref);
@@ -108,7 +108,7 @@ module.exports = {
     // try to update the team's code
     try {
       var query = {code: req.param('code')};
-      var teams_ref = await(Teams.update(query, {form: req.param('content'), last_content_edit: new Date().getTime()})); 
+      var teams_ref = await(Teams.update(query, {form: req.param('content'), last_content_edit: new Date()})); 
       return RespService.s(res, 'Form updated successfully');
     } catch(err) {
       return RespService.e(res, 'Database fail: '+err);
@@ -130,9 +130,7 @@ module.exports = {
     // try to update the team
     try {
       var query = {code: req.param('code')};
-      var d = new Date();
-      var n = d.getTime();
-      var teams_ref = await(Teams.update(query, {ui: req.param('content'), last_content_edit: new Date().getTime()})); 
+      var teams_ref = await(Teams.update(query, {ui: req.param('content'), last_content_edit: new Date()})); 
       return RespService.s(res, 'UI updated successfully');
     } catch(err) {
       return RespService.e(res, 'Database fail: '+err);
