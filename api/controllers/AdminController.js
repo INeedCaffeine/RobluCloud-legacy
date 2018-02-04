@@ -34,7 +34,6 @@ module.exports = {
     // checks for required params
     if (!req.param('officialName')) return RespService.e(res, 'Missing name');
     if (!req.param('ownerEmail')) return RespService.e(res, 'Missing email');
-    if (!req.param('secret')) return RespService.e(res, 'Missing secret');
 
     //creates array "new_user" with all the info provided in the call, as well as generated a five character long team code
     var new_team = {active: false, official_team_name: req.param('officialName'), owner_email: req.param('ownerEmail'), code: Math.random().toString(36).substring(3, 12), secret: Math.random().toString(36).substring(3, 14)};

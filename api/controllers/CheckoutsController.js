@@ -89,7 +89,6 @@ module.exports = {
       // Get the variables for this checkout
       var id2 = classmem[item].id;
       var status2 = classmem[item].status;
-      var content2 = classmem[item].team;
       var query = {code: req.param('code'), id: id2};
       
       try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: new Date().getTime() / 1000})); }
