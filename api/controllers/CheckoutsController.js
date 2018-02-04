@@ -22,7 +22,7 @@ module.exports = {
     try {
       var query = {code: req.param('code')};
       await(Teams.update(query, {
-        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: new Date().getTime() / 1000
+        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: new Date().getTime()
         , form: req.param('form'), ui: req.param('ui'), active: true
       }));
     } catch(err) { return RespService.e(res, 'Failed to update team model'); }
@@ -38,7 +38,7 @@ module.exports = {
     for(item in classmem) {
       var cid = classmem[item].id;
       var ccontent = classmem[item];
-      var new_checkout = { id: cid, content: ccontent, time: new Date().getTime() / 1000, status: 0, code: req.param('code')};
+      var new_checkout = { id: cid, content: ccontent, time: new Date().getTime(), status: 0, code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }
@@ -90,11 +90,9 @@ module.exports = {
       var id2 = classmem[item].id;
       var status2 = classmem[item].status;
       var content2 = classmem[item].team;
-      var time2 = classmem[item].time;
-
       var query = {code: req.param('code'), id: id2};
       
-      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: time2 / 1000})); }
+      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: new Date().getTime()})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
@@ -120,7 +118,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((req.param('time') / 1000) < items[i].time) toReturnItems.push(items[i]);
+          if (req.param('time') < items[i].time) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -148,7 +146,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time > (req.param('time') / 1000) && items[i].status == 2) toReturnItems.push(items[i]);
+          if (items[i].time > req.param('time')  && items[i].status == 2) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
