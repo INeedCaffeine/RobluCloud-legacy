@@ -16,7 +16,7 @@ module.exports = {
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
-    if (!req.param('code') || !req.param('number') || !req.param('active_event_name') || !req.param('form') || !req.param('ui') || !req.param('tbaKey') return RespService.e(res, 'Missing a parameter.');
+    if (!req.param('code') || !req.param('number') || !req.param('active_event_name') || !req.param('form') || !req.param('ui') || !req.param('tbaKey')) return RespService.e(res, 'Missing a parameter.');
 
     // Get a team model reference
     try {
