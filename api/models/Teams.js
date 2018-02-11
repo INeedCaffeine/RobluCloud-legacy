@@ -44,6 +44,9 @@ module.exports = {
       notNull: true,
       defaultsTo: '',
     },
+    tba_event_key: {
+      type: 'text',
+    },
     last_content_edit: { // returns the last time either FORM or UI were pushed.
       type: 'integer',
       defaultsTo: 0,
