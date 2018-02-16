@@ -91,8 +91,15 @@ module.exports = {
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
-      // add 8 seconds to reduce Master import failures
-      try { await(Checkouts.update(query, { content: classmem[item], status: status2, time: (Date.now() / 1000 | 0) + 8})); }
+      /*
+       * Why is 120 seconds added to the time? This is a bit complicated, but let me explain.
+       * Let's say that a scouter just pushed a checkout, but simultaneously, a Roblu Master app is
+       * is completing a sync (where checkouts where found) that is occuring at exactly the same
+       * time as this is getting imported. What will happen is that the Roblu Master will receive
+       * a timestamp that is ahead of data that is just being updated. So make sure we give a buffer,
+       * in this case, 120 seconds past the current time, to prevent this issue.
+       */ 
+      try { await(Checkouts.update(query, { content: classmem[item], status: status2, time: (Date.now() / 1000 | 0) + 120})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
