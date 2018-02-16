@@ -90,8 +90,9 @@ module.exports = {
       var id2 = classmem[item].id;
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
-      
-      try { await(Checkouts.update(query, { content: classmem[item], status: status2, time: (Date.now() / 1000 | 0)})); }
+
+      // add 8 seconds to reduce Master import failures
+      try { await(Checkouts.update(query, { content: classmem[item], status: status2, time: (Date.now() / 1000 | 0) + 8})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
