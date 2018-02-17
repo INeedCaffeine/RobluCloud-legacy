@@ -40,7 +40,7 @@ module.exports = {
     for(item in classmem) {
       var cid = classmem[item].id;
       var ccontent = classmem[item];
-      var new_checkout = { id: cid, content: ccontent, time: newTimeStamp, status: 0, code: req.param('code')};
+      var new_checkout = { id: cid, content: ccontent, time: 100, status: 0, code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }

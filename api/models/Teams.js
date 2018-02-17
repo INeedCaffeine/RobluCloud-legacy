@@ -51,7 +51,6 @@ module.exports = {
     },
     last_content_edit: { // returns the last time either FORM or UI were pushed.
       type: 'integer',
-      size: 64,
       defaultsTo: 0,
     },
     active: { // stores whether an active event exists, if false, no syncing should occur
