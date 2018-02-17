@@ -50,8 +50,8 @@ module.exports = {
       defaultsTo: '',
     },
     last_content_edit: { // returns the last time either FORM or UI were pushed.
-      type: 'integer',
-      defaultsTo: 0,
+      type: 'datetime',
+      defaultsTo: Date.now
     },
     active: { // stores whether an active event exists, if false, no syncing should occur
       type: 'boolean',
