@@ -129,7 +129,7 @@ module.exports = {
 
     // try to update the team
     try {
-      var query = {code: req.param('code')};
+      var query = { code: req.param('code') };
       var teams_ref = await(Teams.update(query, { ui: req.param('content'), last_content_edit: new Date()})); 
       return RespService.s(res, 'UI updated successfully');
     } catch(err) {
