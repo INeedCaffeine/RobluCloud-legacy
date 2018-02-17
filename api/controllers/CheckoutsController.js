@@ -22,7 +22,7 @@ module.exports = {
     try {
       var query = {code: req.param('code')};
       await(Teams.update(query, {
-        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: Date.now()
+        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: 10
         , form: req.param('form'), ui: req.param('ui'), active: true, tba_event_key: req.param('tbaKey')
       }));
     } catch(err) { return RespService.e(res, 'Failed to update team model'); }
