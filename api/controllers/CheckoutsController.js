@@ -22,7 +22,7 @@ module.exports = {
     try {
       var query = {code: req.param('code')};
       await(Teams.update(query, {
-        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: (Date.now() / 1000 | 0)
+        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: Date.now()
         , form: req.param('form'), ui: req.param('ui'), active: true, tba_event_key: req.param('tbaKey')
       }));
     } catch(err) { return RespService.e(res, 'Failed to update team model'); }
@@ -38,7 +38,7 @@ module.exports = {
     for(item in classmem) {
       var cid = classmem[item].id;
       var ccontent = classmem[item];
-      var new_checkout = { id: cid, content: ccontent, time: (Date.now() / 1000 | 0), status: 0, code: req.param('code')};
+      var new_checkout = { id: cid, content: ccontent, time: Date.now(), status: 0, code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }
@@ -85,21 +85,16 @@ module.exports = {
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var subitem;
     var item;
-    for (item in classmem) {
+
+    var newTimeStamp = Date.now() / 1000;
+
+    for(item in classmem) {
       // Get the variables for this checkout
       var id2 = classmem[item].id;
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
-      /*
-       * Why is 45 seconds added to the time? This is a bit complicated, but let me explain.
-       * Let's say that a scouter just pushed a checkout, but simultaneously, a Roblu Master app is
-       * is completing a sync (where checkouts where found) that is occuring at exactly the same
-       * time as this is getting imported. What will happen is that the Roblu Master will receive
-       * a timestamp that is ahead of data that is just being updated. So make sure we give a buffer,
-       * in this case, 45 seconds past the current time, to prevent this issue.
-       */ 
-      try { await(Checkouts.update(query, { content: classmem[item], status: status2, time: (Date.now() / 1000 | 0) + 45})); }
+      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: newTimeStamp})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
@@ -125,7 +120,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((req.param('time') / 1000 | 0) < items[i].time) toReturnItems.push(items[i]);
+          if (req.param('time') / 1000 < items[i].time) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -151,9 +146,9 @@ module.exports = {
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
 
-        for (i = 0; i < items.length; i++) {
+        for(i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time > (req.param('time') / 1000 | 0) && items[i].status == 2) toReturnItems.push(items[i]);
+          if (items[i].time > req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
