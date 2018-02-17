@@ -44,9 +44,11 @@ module.exports = {
       type: 'integer'
     },
     time: { // stores the last time this checkout was edited, helps to reduce data transfers, UNIX seconds format
-      type: 'datetime',
+      type: 'date',
       notNull: true,
-      defaultsTo: Date.now
+      defaultsTo: function () {
+        return new Date();
+      }
     },
 
     /*
