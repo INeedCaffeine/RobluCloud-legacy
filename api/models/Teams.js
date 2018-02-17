@@ -51,9 +51,6 @@ module.exports = {
     },
     last_content_edit: { // returns the last time either FORM or UI were pushed.
       type: 'date',
-      defaultsTo: function () {
-        return new Date();
-      }
     },
     active: { // stores whether an active event exists, if false, no syncing should occur
       type: 'boolean',

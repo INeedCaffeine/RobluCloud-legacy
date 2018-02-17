@@ -45,10 +45,6 @@ module.exports = {
     },
     time: { // stores the last time this checkout was edited, helps to reduce data transfers, UNIX seconds format
       type: 'date',
-      notNull: true,
-      defaultsTo: function () {
-        return new Date();
-      }
     },
 
     /*

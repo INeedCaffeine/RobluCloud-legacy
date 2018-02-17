@@ -22,7 +22,7 @@ module.exports = {
     try {
       var query = {code: req.param('code')};
       await(Teams.update(query, {
-        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: Date.now()
+        number: req.param('number'), active_event_name: req.param('active_event_name'), last_content_edit: new Date()
         , form: req.param('form'), ui: req.param('ui'), active: true, tba_event_key: req.param('tbaKey')
       }));
     } catch(err) { return RespService.e(res, 'Failed to update team model'); }
@@ -32,7 +32,7 @@ module.exports = {
     try { await(Checkouts.destroy(query)); }
     catch(err) {}
 
-    var newTimeStamp = Date.now();
+    var newTimeStamp = new Date();
 
     // Loop through the JSON array of received checkouts
     var classmem = JSON.parse(req.param('content'), 'utf8');
@@ -88,7 +88,7 @@ module.exports = {
     var subitem;
     var item;
 
-    var newTimeStamp = Date.now();
+    var newTimeStamp = new Date();
 
     for(item in classmem) {
       // Get the variables for this checkout
@@ -122,7 +122,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (req.param('time') < items[i].time) toReturnItems.push(items[i]);
+          if (new Date(req.param('time')) < items[i].time) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -150,7 +150,7 @@ module.exports = {
 
         for(i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time > req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
+          if (items[i].time > new Date(req.param('time')) && items[i].status == 2) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
