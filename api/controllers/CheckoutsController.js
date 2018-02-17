@@ -122,7 +122,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (new Date(req.param('time')) < items[i].time) toReturnItems.push(items[i]);
+          if (req.param('time') < items[i].time.getTime()) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -150,7 +150,7 @@ module.exports = {
 
         for(i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time > new Date(req.param('time')) && items[i].status == 2) toReturnItems.push(items[i]);
+          if (items[i].time.getTime() > req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
