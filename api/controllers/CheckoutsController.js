@@ -31,14 +31,16 @@ module.exports = {
     var query = {code: req.param('code')};
     try { await(Checkouts.destroy(query)); }
     catch(err) {}
-    
+
+    var newTimeStamp = Date.now();
+
     // Loop through the JSON array of received checkouts
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var item;
     for(item in classmem) {
       var cid = classmem[item].id;
       var ccontent = classmem[item];
-      var new_checkout = { id: cid, content: ccontent, time: Date.now(), status: 0, code: req.param('code')};
+      var new_checkout = { id: cid, content: ccontent, time: newTimeStamp, status: 0, code: req.param('code')};
       try { await(Checkouts.create(new_checkout)); } // Add the checkouts to the Checkouts model
       catch(err) {}
     }
