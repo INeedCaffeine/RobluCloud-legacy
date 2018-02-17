@@ -76,8 +76,6 @@ module.exports = {
    * Updates the content and status for multiple checkouts
    */
   pushCheckouts: asyncHandler(function (req, res) {
-    var newTimeStamp = new Date();
-
     try { team = await(TeamAuthService.authenticate_async(req)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
     
@@ -89,14 +87,14 @@ module.exports = {
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var subitem;
     var item;
-
+    
     for(item in classmem) {
       // Get the variables for this checkout
       var id2 = classmem[item].id;
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
-      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: newTimeStamp})); }
+      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: new Date()})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
