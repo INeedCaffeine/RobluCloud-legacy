@@ -94,6 +94,10 @@ module.exports = {
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
+      // Temporary logging
+      var time = new Date().getTime();
+      console.log('Updated timestamp: ' + time);
+
       try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: new Date()})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
@@ -120,7 +124,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (req.param('time') < items[i].time.getTime()) toReturnItems.push(items[i]);
+          if (req.param('time') <= items[i].time.getTime()) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -148,7 +152,7 @@ module.exports = {
 
         for(i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (items[i].time.getTime() > req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
+          if(items[i].time.getTime() >= req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
