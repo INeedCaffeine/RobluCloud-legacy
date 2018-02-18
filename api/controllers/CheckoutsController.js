@@ -134,7 +134,7 @@ module.exports = {
     catch (err) { return RespService.e(res, 'Database fail: ' + err) };
   }),
   /*
-   * Pulls all checkouts with verified time stamp and status==3 so the master app can parse them
+   * Pulls all checkouts with verified time stamp and status==2 so the master app can parse them
    */
   pullCompletedCheckouts: asyncHandler(function (req, res) {
     try { team = await(TeamAuthService.authenticate_async(req)); }
@@ -150,7 +150,9 @@ module.exports = {
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
 
-        for(i = 0; i < items.length; i++) {
+        for (i = 0; i < items.length; i++) {
+          console.log('Comparing a received timestamp of: ' + req.param('time') + ' to the timestamp of item with id ' + items[i].id + ' time: ' + items[i].time.getTime());
+
           // Only receive the checkout if it's completed and verified with the submitted time stamp
           if(items[i].time.getTime() >= req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
         }
