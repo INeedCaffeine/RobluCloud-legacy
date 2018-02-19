@@ -151,6 +151,7 @@ module.exports = {
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         var receivedTimestamp = new Date();
         receivedTimestamp.setSeconds(req.param('time'));
+        console.log('Received time: ' + req.param('time'));
 
         for (i = 0; i < items.length; i++) {
 
