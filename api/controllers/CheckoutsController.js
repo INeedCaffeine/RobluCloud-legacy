@@ -148,7 +148,9 @@ module.exports = {
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((items[i].status == 2) && ((items[i].time.getTime() / 1000 | 0) > (time / 1000 | 0))) {
+          console.log('Comparing ' + items[i].time.getTime() + ' to ' + time + ' = ' + (items[i].time.getTime() > time));
+
+          if ((items[i].status == 2) && (items[i].time.getTime() > time)) {
             toReturnItems.push(items[i]);
           }
         }
