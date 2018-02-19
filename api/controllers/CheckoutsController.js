@@ -151,8 +151,9 @@ module.exports = {
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         for (i = 0; i < items.length; i++) {
 
-          if (items[i].id == 2) {
-            console.log('Received date: ' + receivedTimestamp.getTime() + ' SErver time: ' + items[i].time.getTime());
+          if (items[i].id == 22) {
+            console.log('Received date: ' + req.param('time') + ' SErver time: ' + items[i].time.getTime());
+            console.log(items[i].time >= req.param('time'))
           }
 
           // Only receive the checkout if it's completed and verified with the submitted time stamp
