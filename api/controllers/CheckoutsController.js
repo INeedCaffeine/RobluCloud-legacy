@@ -87,7 +87,6 @@ module.exports = {
     var classmem = JSON.parse(req.param('content'), 'utf8');
     var subitem;
     var item;
-    var timeVar = new Date();
 
     for(item in classmem) {
       // Get the variables for this checkout
@@ -95,7 +94,7 @@ module.exports = {
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
-      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: timeVar})); }
+      try { await(Checkouts.update(query, {content: classmem[item], status: status2, time: new Date()})); }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
@@ -121,7 +120,7 @@ module.exports = {
 
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if (req.param('time') <= items[i].time.getTime()) toReturnItems.push(items[i]);
+          if (req.param('time') < items[i].time.getTime()) toReturnItems.push(items[i]);
         }
 
         return RespService.s(res, toReturnItems);
@@ -147,13 +146,8 @@ module.exports = {
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         for (i = 0; i < items.length; i++) {
-
-          if(items[i].status == 2) console.log('Received date: ' + req.param('time') + ' Server time: ' + items[i].time.getTime());
-
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((items[i].status == 2) && (items[i].time.getTime() >= req.param('time'))) {
-            console.log('Accepted item with id: ' + items[i].id);
-
+          if ((items[i].status == 2) && (items[i].time.getTime() > req.param('time'))) {
             toReturnItems.push(items[i]);
           }
         }
