@@ -140,6 +140,7 @@ module.exports = {
     if (!req.param('code') || !req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
+    var time = req.param('time');
     try {
       // new array
       var toReturnItems = [];
@@ -147,7 +148,7 @@ module.exports = {
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((items[i].status == 2) && (items[i].time.getTime() > req.param('time'))) {
+          if ((items[i].status == 2) && ((items[i].time.getTime() / 1000 | 0) > (time / 1000 | 0))) {
             toReturnItems.push(items[i]);
           }
         }
