@@ -153,11 +153,11 @@ module.exports = {
 
           if (items[i].id == 22) {
             console.log('Received date: ' + req.param('time') + ' SErver time: ' + items[i].time.getTime());
-            console.log(items[i].time >= req.param('time'))
+            console.log(items[i].time.getTime() >= req.param('time'))
           }
 
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if ((items[i].status == 2) && (items[i].time >= req.param('time'))) {
+          if ((items[i].status == 2) && (items[i].time.getTime() >= req.param('time'))) {
             console.log('Accepted item with id: ' + items[i].id);
 
             toReturnItems.push(items[i]);
