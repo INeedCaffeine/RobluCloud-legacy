@@ -149,12 +149,13 @@ module.exports = {
       var toReturnItems = [];
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
+        var receivedTimestamp = new Date(req.param('time'));
 
         for (i = 0; i < items.length; i++) {
-          console.log('Comparing a received timestamp of: ' + req.param('time') + ' to the timestamp of item with id ' + items[i].id + ' time: ' + items[i].time.getTime());
-
           // Only receive the checkout if it's completed and verified with the submitted time stamp
-          if(items[i].time.getTime() >= req.param('time') && items[i].status == 2) toReturnItems.push(items[i]);
+          if ((items[i].status == 2) && (items[i].time >= receivedTimestamp)) {
+            toReturnItems.push(items[i]);
+          }
         }
 
         return RespService.s(res, toReturnItems);
