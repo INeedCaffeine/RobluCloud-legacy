@@ -154,6 +154,8 @@ module.exports = {
         for (i = 0; i < items.length; i++) {
           // Only receive the checkout if it's completed and verified with the submitted time stamp
           if ((items[i].status == 2) && (items[i].time >= receivedTimestamp)) {
+            console.log('Accepted item with id: ' + items[i].id);
+
             toReturnItems.push(items[i]);
           }
         }
