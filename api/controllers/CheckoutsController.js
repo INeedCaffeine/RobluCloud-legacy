@@ -152,6 +152,12 @@ module.exports = {
         var receivedTimestamp = new Date(req.param('time'));
 
         for (i = 0; i < items.length; i++) {
+
+          if (items[i].id == 2) {
+            console.log('Received date: ' + receivedTimestamp.getTime() + ' SErver time: ' + items[i].time.getTime() + ' Operator: ' + (receivedTimestamp =< items[i].time) + ' o2: '
+              + (receivedTimestamp.getTime() =< items[i].time.getTime()));
+          }
+
           // Only receive the checkout if it's completed and verified with the submitted time stamp
           if ((items[i].status == 2) && (items[i].time >= receivedTimestamp)) {
             console.log('Accepted item with id: ' + items[i].id);
