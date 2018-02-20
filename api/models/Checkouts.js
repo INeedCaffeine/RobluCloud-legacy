@@ -9,8 +9,7 @@
  *  If status is equal to...
  *     0 - the checkout is available, when any client requests a sync (and sync is verified by timestamp), the entire checkout model will be included in the return response
  *     1 - the checkout is currently checked out to a user, when any client requests a sync (and sync is verified by timestamp), only the meta-data should be returned
- *     2 - this status represents "locally checked out", to the server, it's the same meaning as status==
- *     3 - the checkout is completed, when any client requests a sync (and sync is verified by timestamp), the entire checkout model will be included in the return response
+ *     2 - the checkout is completed, when any client requests a sync (and sync is verified by timestamp), the entire checkout model will be included in the return response
  *
  *  Let's review 2 concepts that need to be defined further:
  *       -"sync is verified by timestamp" means that the server's time stamp is GREATER THAN the requesting clients time stamp
