@@ -13,7 +13,7 @@ module.exports = {
    * this method is really only designed to ward off people who don't care enough.
    */
   authenticate_async: function (req, readOnlyAllowed) {
-    if (readOnlyAllowed && req.param('teamNumber') != null) {
+    if (readOnlyAllowed && req.param('teamNumber')) {
       // Only allow teams through that have opted in
       if (!req.param('teamNumber')) throw new Error('Missing team number for read only authentication.');
 
