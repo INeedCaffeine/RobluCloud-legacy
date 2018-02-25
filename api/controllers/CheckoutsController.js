@@ -12,7 +12,7 @@ module.exports = {
    * Uploads a new event to the server and flags the sync system as active.
    */
   init: asyncHandler( function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
@@ -52,7 +52,7 @@ module.exports = {
    * Removes all scouting data for an event and the team's syncing system as in-active
    */
   purge: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // Check for required params
@@ -76,7 +76,7 @@ module.exports = {
    * Updates the content and status for multiple checkouts
    */
   pushCheckouts: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
     
     // Check for required params
@@ -105,7 +105,7 @@ module.exports = {
    * Pulls all checkouts with verified time stamp
    */
   pullCheckouts: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params
@@ -133,7 +133,7 @@ module.exports = {
    * Pulls all checkouts with verified time stamp and status==2 so the master app can parse them
    */
   pullCompletedCheckouts: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params

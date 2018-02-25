@@ -19,7 +19,7 @@ module.exports = {
   *
   */
   getTeam: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     if (!req.param('code')) return RespService.e(res, 'Missing code');
@@ -46,7 +46,7 @@ module.exports = {
    *
    */
   isActive: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     if (!req.param('code')) return RespService.e(res, 'Missing code');
@@ -70,7 +70,7 @@ module.exports = {
    * 
    */ 
   regenerateCode: asyncHandler(function (req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     if (!req.param('code')) return RespService.e(res, 'Missing code');
@@ -92,13 +92,34 @@ module.exports = {
 
     return RespService.s(res, updated);
   }),  
-  
+/*
+ * Changes the opt-in status for this team
+ * 
+ */
+  pushOptStatus: asyncHandler(function (req, res) {
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
+    catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
+
+    // check for required params
+    if (!req.param('opted')) return RespService.e(res, 'Missing opted state');
+    if (!req.param('code')) return RespService.e(res, 'Missing team code');
+
+    // try to update the team's code
+    try {
+      var query = { code: req.param('code') };
+      var teams_ref = await(Teams.update(query, {opted_in: req.param('opted')}));
+      return RespService.s(res, 'Opted status updated successfully updated successfully');
+    } catch (err) {
+      return RespService.e(res, 'Database fail: ' + err);
+    }
+  }),
+
   /*
    * Pushes a form's content to the team model
    * 
    */ 
   pushForm: asyncHandler(function(req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params
@@ -120,7 +141,7 @@ module.exports = {
    * 
    */
   pushUI: asyncHandler(function(req, res) {
-    try { team = await(TeamAuthService.authenticate_async(req)); }
+    try { team = await(TeamAuthService.authenticate_async(req, false)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params

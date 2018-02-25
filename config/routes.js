@@ -19,6 +19,7 @@ module.exports.routes = {
 'GET /teams/regenerateCode' : 'TeamsController.regenerateCode',
 'POST /teams/pushForm' : 'TeamsController.pushForm',
 'POST /teams/pushUI' : 'TeamsController.pushUI',
+'GET /teams/opt': 'TeamsController.pushOptStatus',
 
 // Checkouts
 'POST /checkouts/init' : 'CheckoutsController.init',

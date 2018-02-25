@@ -56,6 +56,10 @@ module.exports = {
       type: 'boolean',
       defaultTo: false,
     },
+    opted_in: { // specifies whether this team's scouting data should be available with their FRC team number. If opted in, any team can use pullCheckouts(), pullCompletedCheckouts(), and getTeam()
+      type: 'boolean',
+      defaultTo: false,
+    },
 
     /*
      * Content level items

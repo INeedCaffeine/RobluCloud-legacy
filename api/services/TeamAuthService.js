@@ -12,8 +12,23 @@ module.exports = {
    * to help secure the server, that'd be awesome! If you're breaking into it, congrats,
    * this method is really only designed to ward off people who don't care enough.
    */
-  authenticate_async: function (req) {
-    if (!req.param('code')) throw new Error('Missing team code parameter');
+  authenticate_async: function (req, readOnlyAllowed) {
+    if (readOnlyAllowed && req.param('teamNumber') != null) {
+      // Only allow teams through that have opted in
+      if (!req.param('teamNumber')) throw new Error('Missing team number for read only authentication.');
+
+      try {
+        var team = await(Teams.findOne({ official_team_name: req.param('teamNumber') }));
+        if (!team.opted_in) throw new Error('Team has not opted in to public scouting data.');
+      }
+      catch (err) { throw new Error('Token lookup problem. Check input data. ' + err); }
+
+      if (!team) throw new Error('Team not found in database');
+
+      return team;
+    }
+
+    if(!req.param('code')) throw new Error('Missing team code parameter');
 
     try { var team = await(Teams.findOne({ code: req.param('code') })); }
     catch (err) { throw new Error('Token lookup problem. Check input data. ' + err); }
