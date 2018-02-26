@@ -22,7 +22,7 @@ module.exports = {
     try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
-    var query = { code: req.param('code') };
+    var query = { code: req.param('code'), official_team_name: req.param('teamNumber')};
 
     try {
       var teams_ref = await(Teams.findOne(query));
