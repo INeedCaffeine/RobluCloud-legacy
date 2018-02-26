@@ -109,7 +109,7 @@ module.exports = {
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params
-    if (!req.param('code') || !req.param('time')) return RespService.e(res, 'Missing a parameter');
+    if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
     try {
@@ -137,7 +137,7 @@ module.exports = {
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
     // check for required params
-    if (!req.param('code') || !req.param('time')) return RespService.e(res, 'Missing a parameter');
+    if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
     var time = req.param('time');
