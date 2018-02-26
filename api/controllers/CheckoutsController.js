@@ -112,6 +112,8 @@ module.exports = {
     if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
+    if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
+
     try {
       // new array
       var toReturnItems = [];
@@ -140,6 +142,9 @@ module.exports = {
     if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
+    if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
+
+
     var time = req.param('time');
     try {
       // new array
