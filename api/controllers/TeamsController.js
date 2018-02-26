@@ -51,6 +51,7 @@ module.exports = {
     if (!req.param('code')) return RespService.e(res, 'Missing code');
 
     var query = { code: req.param('code') };
+    if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
 
     try {
       var teams_ref = await(Teams.findOne(query));
