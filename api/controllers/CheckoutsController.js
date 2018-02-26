@@ -112,7 +112,20 @@ module.exports = {
     if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
-    if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
+    // If the team number was sent to the server, we must determine the team's code based off their number
+    if (req.param('teamNumber')) {
+      try {
+        var query2 = { official_team_name: req.param('teamNumber') };
+        var teams_ref = await(Teams.findOne(query2));
+
+        if (teams_ref.opted_in) {
+          query = { code: teams_ref.code };
+        }
+
+      } catch (err) {
+        return RespService.e(res, 'Error: ' + err);
+      }
+    }
 
     try {
       // new array
@@ -142,8 +155,20 @@ module.exports = {
     if (!req.param('time')) return RespService.e(res, 'Missing a parameter');
 
     var query = { code: req.param('code') };
-    if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
+    // If the team number was sent to the server, we must determine the team's code based off their number
+    if (req.param('teamNumber')) {
+      try {
+        var query2 = { official_team_name: req.param('teamNumber') };
+        var teams_ref = await(Teams.findOne(query2));
 
+        if (teams_ref.opted_in) {
+          query = { code: teams_ref.code };
+        }
+
+      } catch (err) {
+        return RespService.e(res, 'Error: ' + err);
+      }
+    }
 
     var time = req.param('time');
     try {
