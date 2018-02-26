@@ -48,8 +48,6 @@ module.exports = {
     try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
-    if (!req.param('code')) return RespService.e(res, 'Missing code');
-
     var query = { code: req.param('code') };
     if (req.param('teamNumber')) query = { official_team_name: req.param('teamNumber') };
 
