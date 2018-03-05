@@ -32,7 +32,7 @@ module.exports = {
       teams_ref.secret = null;
 
       if (req.param('syncID')) {
-        if (req.param('syncID') != -1 && req.param('syncID') != teams_ref.syncID) return RespService.s(res, 'You are up to date (no team data available)!');
+        if (req.param('syncID') != -1 && req.param('syncID') != teams_ref.sync_id) return RespService.s(res, 'You are up to date (no team data available)!');
       }
 
       return RespService.s(res, teams_ref);
@@ -127,7 +127,7 @@ module.exports = {
     // try to update the team's code
     try {
       var query = {code: req.param('code')};
-      var teams_ref = await(Teams.update(query, { form: req.param('content')})); 
+      var teams_ref = await(Teams.update(query, {form: req.param('content')})); 
       return RespService.s(res, 'Form updated successfully');
     } catch(err) {
       return RespService.e(res, 'Database fail: '+err);
