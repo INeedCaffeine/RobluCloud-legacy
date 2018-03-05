@@ -49,8 +49,9 @@ module.exports = {
       notNull: true,
       defaultsTo: '',
     },
-    last_content_edit: { // returns the last time either FORM or UI were pushed.
-      type: 'datetime',
+    syncID: { // returns the last time either FORM or UI were pushed.
+      type: 'integer',
+      autoIncrement: true,
     },
     active: { // stores whether an active event exists, if false, no syncing should occur
       type: 'boolean',

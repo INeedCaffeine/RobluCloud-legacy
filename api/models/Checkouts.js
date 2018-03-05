@@ -42,8 +42,9 @@ module.exports = {
     status: { // an integer status representing the state of this Checkout
       type: 'integer'
     },
-    time: { // stores the last time this checkout was edited, helps to reduce data transfers, UNIX seconds format
-      type: 'datetime',
+    syncID: { // essentially the version number of this checkout, if this doesn't match a local version, then the checkout should be re-pulled
+      type: 'integer',
+      autoIncrement: true,
     },
 
     /*
