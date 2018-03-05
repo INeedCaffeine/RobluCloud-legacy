@@ -19,6 +19,10 @@ module.exports = {
   *
   */
   getTeam: asyncHandler(function (req, res) {
+
+    console.log('here');
+
+
     try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
