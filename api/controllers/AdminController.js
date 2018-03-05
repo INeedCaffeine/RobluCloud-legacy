@@ -48,7 +48,7 @@ module.exports = {
    * Deletes a team on the server
    */
   deleteTeam: asyncHandler(function (req, res) {
-    try { user = await(AdminAuthService.authenticate_async(req)); }
+    try { user = await(AdminAuthService.authenticate_async(req)); } 
     catch (err) { return RespService.e(res, 'Failed to authenticate as Admin'); };
 
     if (!req.param('ownerEmail')) return RespService.e(res, 'Missing owner email');

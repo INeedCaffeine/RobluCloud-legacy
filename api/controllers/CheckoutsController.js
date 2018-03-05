@@ -106,9 +106,6 @@ module.exports = {
     try { team = await(TeamAuthService.authenticate_async(req, true)); }
     catch (err) { return RespService.e(res, 'Unable to authenticate with provided team code.'); };
 
-    // check for required params
-    if (!req.param('syncIDs')) return RespService.e(res, 'Missing a parameter');
-
     var query = { code: req.param('code') };
     // If the team number was sent to the server, we must determine the team's code based off their number
     if(req.param('teamNumber')) {
