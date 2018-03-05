@@ -220,11 +220,7 @@ module.exports = {
            * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
            */
           for (item in classmem) {
-            // Get the variables for this checkout
-            var id2 = classmem[item].checkoutID;
-            var syncID2 = classmem[item].syncID;
-
-            if ((items[i].status == 2) && (classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].syncID)) {
+            if ((items[i].status == 2) && (classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
               toReturnItems.push(items[i]);
             }
           }

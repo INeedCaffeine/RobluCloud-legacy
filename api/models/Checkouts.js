@@ -42,7 +42,7 @@ module.exports = {
     status: { // an integer status representing the state of this Checkout
       type: 'integer'
     },
-    syncID: { // essentially the version number of this checkout, if this doesn't match a local version, then the checkout should be re-pulled
+    sync_id: { // essentially the version number of this checkout, if this doesn't match a local version, then the checkout should be re-pulled
       type: 'integer',
       defaultsTo: 0,
       autoIncrement: true,
