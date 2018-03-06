@@ -106,7 +106,7 @@ module.exports = {
     try {
       var query = { code: req.param('code') };
       var teams_ref = await(Teams.update(query, { opted_in: req.param('opted') }));
-      await(Teams.update(query, { sync_id: teams_ref.sync_id++ }));
+      await(Teams.update(query, { sync_id: teams_ref.sync_id+1 }));
       return RespService.s(res, 'Opted status updated successfully updated successfully');
     } catch (err) {
       return RespService.e(res, 'Database fail: ' + err);
@@ -129,7 +129,7 @@ module.exports = {
     try {
       var query = {code: req.param('code')};
       var teams_ref = await(Teams.update(query, { form: req.param('content') }));
-      await(Teams.update(query, { sync_id: teams_ref.sync_id++ }));
+      await(Teams.update(query, { sync_id: teams_ref.sync_id+1 }));
       return RespService.s(res, 'Form updated successfully');
     } catch(err) {
       return RespService.e(res, 'Database fail: '+err);
@@ -152,7 +152,7 @@ module.exports = {
     try {
       var query = { code: req.param('code') };
       var teams_ref = await(Teams.update(query, { ui: req.param('content') }));
-      await(Teams.update(query, { sync_id: teams_ref.sync_id++ }));
+      await(Teams.update(query, { sync_id: teams_ref.sync_id+1 }));
       return RespService.s(res, 'UI updated successfully');
     } catch(err) {
       return RespService.e(res, 'Database fail: '+err);
