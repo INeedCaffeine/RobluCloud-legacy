@@ -125,6 +125,8 @@ module.exports = {
     }
 
     if (req.param('all')) {
+    
+      console.log('here');
       try {
         // new array
         var toReturnItems = [];
