@@ -124,10 +124,10 @@ module.exports = {
       }
     }
 
-    if (req.param('pullAll') == true) {
+    if (req.param('pullAll')) {
       try {
         await(Checkouts.find(query).exec(function (err, items) {
-          return items;
+          return RespService.s(res, items);
         }));
       } catch (err) { return RespService.e(res, 'err: ' + err) };
     } else {
