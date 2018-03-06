@@ -124,7 +124,7 @@ module.exports = {
       }
     }
 
-    if (req.param('pullAll')) {
+    if (req.param('pullAll') == true) {
       try {
         await(Checkouts.find(query).exec(function (err, items) {
           return items;
