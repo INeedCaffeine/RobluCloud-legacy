@@ -123,27 +123,6 @@ module.exports = {
         return RespService.e(res, 'Error: ' + err);
       }
     }
-
-    if (req.param('pullAll') == true) {
-    
-      console.log('here');
-      try {
-        // new array
-        var toReturnItems = [];
-
-        await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
-   
-          for (i = 0; i < items.length; i++) {
-                toReturnItems.push(items[i]);
-          }
-
-          return RespService.s(res, toReturnItems);
-        }));
-
-      }
-      catch (err) { return RespService.e(res, 'Database fail: ' + err) };
-
-    } else {
       try {
         // new array
         var toReturnItems = [];
@@ -161,8 +140,7 @@ module.exports = {
              * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
              */
             for (item in classmem) {
-              if ((classmem[item].checkoutID == items[i].id)) console.log('comparing ' + classmem[item].syncID + ' to ' + items[i].sync_id);
-              if ((classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
+              if (req.param('pullAll') || ((classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id))) {
                 toReturnItems.push(items[i]);
               }
             }
@@ -173,7 +151,7 @@ module.exports = {
 
       }
       catch (err) { return RespService.e(res, 'Database fail: ' + err) };
-    }
+   
   }),
   /*
    * Pulls all checkouts with verified time stamp and status==2 so the master app can parse them
