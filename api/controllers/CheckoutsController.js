@@ -199,14 +199,16 @@ module.exports = {
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
 
-        for (i = 0; i < items.length; i++) {
+        for (item in classmem) {
+          for (i = 0; i < items.length; i++) {
 
           /*
            * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
            */
-          for (item in classmem) {
+
             if ((items[i].status == 2) && (classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
               toReturnItems.push(items[i]);
+              break;
             }
           }
         }
