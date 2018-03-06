@@ -105,7 +105,7 @@ module.exports = {
     // try to update the team's code
     try {
       var query = { code: req.param('code') };
-      var teams_ref = await(Teams.update(query, {opted_in: req.param('opted')}));
+      var teams_ref = await(Teams.update(query, {opted_in: req.param('opted'), sync_id: sync_id++}));
       return RespService.s(res, 'Opted status updated successfully updated successfully');
     } catch (err) {
       return RespService.e(res, 'Database fail: ' + err);
