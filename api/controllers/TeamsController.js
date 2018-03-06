@@ -32,7 +32,7 @@ module.exports = {
       teams_ref.secret = null;
 
       if (req.param('syncID')) {
-        if (req.param('syncID') != -1 && req.param('syncID') != teams_ref.sync_id) return RespService.s(res, 'You are up to date (no team data available)!');
+        if (req.param('syncID') != -1 && req.param('syncID') == teams_ref.sync_id) return RespService.s(res, 'You are up to date (no team data available)!');
       }
 
       return RespService.s(res, teams_ref);
