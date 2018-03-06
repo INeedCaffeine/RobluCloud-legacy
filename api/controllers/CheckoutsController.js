@@ -124,7 +124,7 @@ module.exports = {
       }
     }
 
-    if (req.param('all')) {
+    if (req.param('pullAll')) {
     
       console.log('here');
       try {
