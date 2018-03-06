@@ -159,6 +159,7 @@ module.exports = {
              * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
              */
             for (item in classmem) {
+              if ((classmem[item].checkoutID == items[i].id)) console.log('comparing ' + classmem[item].syncID + ' to ' + items[i].sync_id);
               if ((classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
                 toReturnItems.push(items[i]);
               }
