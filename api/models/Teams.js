@@ -52,7 +52,6 @@ module.exports = {
     sync_id: { // returns the last time either FORM or UI were pushed.
       type: 'integer',
       defaultsTo: 0,
-      autoIncrement: true,
     },
     active: { // stores whether an active event exists, if false, no syncing should occur
       type: 'boolean',

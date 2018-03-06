@@ -45,7 +45,6 @@ module.exports = {
     sync_id: { // essentially the version number of this checkout, if this doesn't match a local version, then the checkout should be re-pulled
       type: 'integer',
       defaultsTo: 0,
-      autoIncrement: true,
     },
 
     /*

@@ -92,7 +92,10 @@ module.exports = {
       var status2 = classmem[item].status;
       var query = {code: req.param('code'), id: id2};
 
-      try { await(Checkouts.update(query, {content: classmem[item], status: status2})); }
+      try {
+        var c_ref = await(Checkouts.update(query, { content: classmem[item], status: status2 }));
+        await(Checkouts.update(query, sync_id: c_ref.sync_id++));
+      }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
     }
