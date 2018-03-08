@@ -7,6 +7,6 @@
     "\\api\\services",
     "\\config"
   ],
-  "SelectedNode": "\\api\\controllers\\CheckoutsController.js",
+  "SelectedNode": "\\api\\models\\Admin.js",
   "PreviewInSolutionExplorer": false
 }
