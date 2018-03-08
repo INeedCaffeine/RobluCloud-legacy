@@ -148,11 +148,19 @@ module.exports = {
             /*
              * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
              */
+            var found = false;
             for (item in classmem) {
               if (((classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id))) {
                 toReturnItems.push(items[i]);
+                found = true;
+                break;
               }
             }
+
+            if (!found) {
+              toReturnItems.push(items[i]);
+            }
+
           }
 
           return RespService.s(res, toReturnItems);
@@ -205,11 +213,14 @@ module.exports = {
           /*
            * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
            */
-
+            var found = false;
             if ((items[i].status == 2) && (classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
               toReturnItems.push(items[i]);
+              found = true;
               break;
             }
+
+            if (!found) toReturnItems.push(items[i]);
           }
         }
 

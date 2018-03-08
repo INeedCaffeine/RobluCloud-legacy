@@ -44,7 +44,7 @@ module.exports = {
       notNull: true,
       defaultsTo: '',
     },
-    tba_event_key: {
+    tba_event_key: { // the TBA API key for this event for syncing
       type: 'text',
       notNull: true,
       defaultsTo: '',

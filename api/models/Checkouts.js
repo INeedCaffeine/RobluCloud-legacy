@@ -1,27 +1,4 @@
 
-/*
- * RCheckout is the most important model in the Roblu Scouting System.
- * This model contains all information sent in a scouting data transfer.
- *
- *  Note the meta-data section, which various Roblu clients will need read/write access to
- *
- *  Let's go over an ***IMPORTANT*** lesson on the status meta-data tag
- *  If status is equal to...
- *     0 - the checkout is available, when any client requests a sync (and sync is verified by timestamp), the entire checkout model will be included in the return response
- *     1 - the checkout is currently checked out to a user, when any client requests a sync (and sync is verified by timestamp), only the meta-data should be returned
- *     2 - the checkout is completed, when any client requests a sync (and sync is verified by timestamp), the entire checkout model will be included in the return response
- *
- *  Let's review 2 concepts that need to be defined further:
- *       -"sync is verified by timestamp" means that the server's time stamp is GREATER THAN the requesting clients time stamp
- *       -the client will use 2 sync methods, "pullCheckoutMeta" and "pullCheckouts", pullCheckoutMeta will return all checkouts with verified timestamp and status==1 or status==2,
- *        pullCheckouts will return all checkouts with verified timestamp, and status==0 or status==3       
- *
- *  Upload procedures:
- *       -to change a checkout's meta status, use CheckoutsController.pushMetaChanges()
- *       -to change a checkout's content, use CheckoutsController.pushCheckouts()
- *
- *
- */
 module.exports = {
   attributes: {
     /*
