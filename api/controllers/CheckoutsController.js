@@ -229,7 +229,7 @@ module.exports = {
             
           }
 
-          if (!found && (items[i[.status == 2)) {
+          if (!found && (items[i].status == 2)) {
             toReturnItems.push(items[i]);
           }
 
