@@ -141,19 +141,28 @@ module.exports = {
         var subitem;
         var item;
 
+        var found = false;
+
         await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
 
           for (i = 0; i < items.length; i++) {
+
+            found = false;
 
             /*
              * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
              */
             for (item in classmem) {
+              if (classmem[item].checkoutID == items[i].id) { found = true; }
+
               if (((classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id))) {
                 toReturnItems.push(items[i]);
+                found = true;
                 break;
               }
             }
+
+            if (!found) { toReturnItems.push(items[i]);}
 
           }
 
@@ -198,20 +207,32 @@ module.exports = {
       var classmem = JSON.parse(req.param('syncIDs'), 'utf8');
       var subitem;
       var item;
+      var found = false;
 
       await(Checkouts.find(query).exec(function (err, items) { // returns all received checkouts assosicated with this team
         for (i = 0; i < items.length; i++) {
+
+          found = false;
+
           for (item in classmem) {
+
+            if (classmem[item].checkoutID == items[i].id) found = true;
 
           /*
            * Alright, we should only return the checkout if the server checkout ID does NOT match the received checkout Id
            */
             if ((items[i].status == 2) && (classmem[item].checkoutID == items[i].id) && (classmem[item].syncID != items[i].sync_id)) {
               toReturnItems.push(items[i]);
+              found = true;
               break;
             }
             
           }
+
+          if (!found && (items[i[.status == 2)) {
+            toReturnItems.push(items[i]);
+          }
+
         }
 
         return RespService.s(res, toReturnItems);
