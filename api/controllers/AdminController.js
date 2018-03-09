@@ -42,7 +42,7 @@ module.exports = {
     try { var teams_object = await(Teams.create(new_team)); }
     catch (err) { return RespService.e(res, err); }
 
-    return RespService.s(res, teams_object);  // respond success with team data
+    return RespService.s(res, new_team);  // respond success with team data
   }),
   /*
    * Deletes a team on the server
