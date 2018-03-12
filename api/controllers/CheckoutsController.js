@@ -94,7 +94,7 @@ module.exports = {
 
       try {
         // First, if the checkout doesn't exist, create it. Content doesn't need to be filled in here becuase it will be updated below
-        var new_checkout = {id: id2, content: " ", status: 0, code: req.param('code')};
+        var new_checkout = {id: id2, content: null, status: 0, code: req.param('code')};
         await(Checkouts.findOrCreate(query, new_checkout))
         // Then update it
         var c_ref = await(Checkouts.update(query, { content: classmem[item], status: status2, sync_id: new Date().getTime() / 1000 }));
