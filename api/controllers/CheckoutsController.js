@@ -94,6 +94,10 @@ module.exports = {
 
       try {
         var c_ref = await(Checkouts.update(query, { content: classmem[item], status: status2, sync_id: new Date().getTime() / 1000 }));
+        if (c_ref == null) { // if the checkout wasn't added, add a new one
+          var new_checkout = { id: id2, content: classmem[item], status: 0, code: req.param('code') };
+          await(Checkouts.create(new_checkout));
+        }
       }
       catch(err) { return RespService.e(res, 'pushCheckout() failed with error: '+err); }
       
